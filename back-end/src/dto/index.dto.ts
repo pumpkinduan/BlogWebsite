@@ -1,1 +1,1 @@
-export * from './article.dto';
+export * from './post.dto';
