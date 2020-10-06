@@ -1,17 +1,31 @@
 import { PostDto, userDto, commentDto } from 'dto/index.dto';
 export class Example {
+	user: userDto.basicUserDto = {
+		id: 524,
+		comment_ids: [45],
+		nickname: 'Tom',
+		related_post_ids: [4, 5],
+		email: '545436@qq.com',
+		avatar: '123.jpg',
+	}
+	superUser: userDto.superUserDto = {
+		profiles: {
+			nickname: 'Pumpkin',
+			github: 'pumpkinduan.github',
+			'avatar': 'pumpkin.jpg',
+			'brief': '即将拥有八块腹肌',
+			'email': 'test@qq.com',
+			'notice': '2.1版本敬请期待喔',
+		},
+		'moment_ids': [121],
+		'word_ids': [544]
+	}
 	commentListItem: commentDto.basicCommentDto = {
 		id: 1212,
 		content: '你好啊',
 		created_at: '3 days ago',
-		related_user: {
-			id: 524,
-			comment_ids: [45],
-			nickname: 'Tom',
-			related_post_ids: [4, 5],
-			email: '545436@qq.com',
-			avatar: '123.jpg',
-		},
+		related_user: this.user,
+		children: []
 	};
 	postListItem: PostDto.basicPostDto = {
 		id: 12,
@@ -37,27 +51,8 @@ export class Example {
 		downloads: 88,
 		description: 'hs',
 		tags: ['js', 'nest'],
-		comments: [245465, 555],
+		comments: [this.commentListItem],
 	};
-	user: userDto.basicUserDto = {
-		id: 524,
-		comment_ids: [45],
-		nickname: 'Tom',
-		related_post_ids: [4, 5],
-		email: '545436@qq.com',
-		avatar: '123.jpg',
-	}
-	superUser: userDto.superUserDto = {
-		profiles: {
-			nickname: 'Pumpkin',
-			github: 'pumpkinduan.github',
-			'avatar': 'pumpkin.jpg',
-			'brief': '即将拥有八块腹肌',
-			'email': 'test@qq.com',
-			'notice': '2.1版本敬请期待喔',
-		},
-		'moment_ids': [121],
-		'word_ids': [544]
-	}
+
 }
 export const exampleInstance = new Example();
