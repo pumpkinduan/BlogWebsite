@@ -28,7 +28,7 @@ export class Example {
 		children: []
 	};
 	postListItem: PostDto.basicPostDto = {
-		id: 12,
+		id: '12',
 		coverUrl:
 			'https://2heng.xin/wp-content/uploads//2019/12/2572384-1024x640.jpg',
 		title: '你好啊，欢迎学习React技术全家桶',
@@ -38,7 +38,7 @@ export class Example {
 		downloads: 88,
 	};
 	postDetail: PostDto.detailPostDto = {
-		id: 11,
+		id: '11',
 		coverUrl:
 			'https://2heng.xin/wp-content/uploads//2019/12/2572384-1024x640.jpg',
 		title: '你好啊，欢迎学习React技术全家桶',
@@ -46,7 +46,7 @@ export class Example {
 		likes: 1235,
 		visitors: 123,
 		content: 'sof',
-		status: ['published'],
+		status: ['published', 'drafted'],
 		author: 'Pumpkin',
 		downloads: 88,
 		description: 'hs',
