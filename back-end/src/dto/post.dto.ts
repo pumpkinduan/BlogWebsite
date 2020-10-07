@@ -19,7 +19,7 @@ export namespace PostInterface {
 	export interface basicPostInterface extends basicPostString, basicPostNumber { }
 	// 文章详情
 	export interface detailPostInterface extends basicPostInterface {
-		status: STATUS;
+		status: status;
 		author?: string;
 		content: string;
 		description: string;

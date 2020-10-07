@@ -1,6 +1,7 @@
 import { PostDto, UserDto, CommentDto } from 'dto/index.dto';
 export class Example {
-	user: UserDto.basicUserDto = {
+	basicUser: UserDto.BasicUserDto = {
+		role: UserDto.ROLE.BasicUser,
 		id: '524',
 		comment_ids: ['45'],
 		nickname: 'Tom',
@@ -8,7 +9,8 @@ export class Example {
 		email: '545436@qq.com',
 		avatar: '123.jpg',
 	}
-	superUser: UserDto.superUserDto = {
+	superUser: UserDto.SuperUserDto = {
+		role: UserDto.ROLE.SuperUser,
 		profiles: {
 			nickname: 'Pumpkin',
 			github: 'pumpkinduan.github',
@@ -16,6 +18,7 @@ export class Example {
 			'brief': '即将拥有八块腹肌',
 			'email': 'test@qq.com',
 			'notice': '2.1版本敬请期待喔',
+
 		},
 		'moment_ids': ['121'],
 		'word_ids': ['544']
@@ -24,7 +27,7 @@ export class Example {
 		id: '1212',
 		content: '你好啊',
 		created_at: '3 days ago',
-		related_user: this.user,
+		related_user: this.basicUser,
 		children: [],
 		related_post_id: '564a'
 	};
