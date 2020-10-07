@@ -1,7 +1,7 @@
 import { ApiProperty, PickType } from "@nestjs/swagger";
 // 管理员DTO
 type notice = { notice: string };
-export namespace userDto {
+export namespace UserDto {
     export class superUserProfile {
         @ApiProperty({ description: '管理员的昵称' })
         nickname: string;

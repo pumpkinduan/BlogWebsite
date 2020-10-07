@@ -1,6 +1,6 @@
-import { PostDto, userDto, CommentDto } from 'dto/index.dto';
+import { PostDto, UserDto, CommentDto } from 'dto/index.dto';
 export class Example {
-	user: userDto.basicUserDto = {
+	user: UserDto.basicUserDto = {
 		id: '524',
 		comment_ids: ['45'],
 		nickname: 'Tom',
@@ -8,7 +8,7 @@ export class Example {
 		email: '545436@qq.com',
 		avatar: '123.jpg',
 	}
-	superUser: userDto.superUserDto = {
+	superUser: UserDto.superUserDto = {
 		profiles: {
 			nickname: 'Pumpkin',
 			github: 'pumpkinduan.github',
