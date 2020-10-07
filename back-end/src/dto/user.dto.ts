@@ -16,17 +16,20 @@ export namespace userDto {
     }
     export class superUserDto {
         profiles: superUserProfile & notice;
-        moment_ids: number[]; // 文章id
-        word_ids: number[]; // 给我的留言id
+        moment_ids: string[]; // 文章id
+        word_ids: string[]; // 给我的留言id
     }
     export class basicUserDto
         extends PickType(superUserProfile, ['nickname', 'email', 'avatar']) {
-        id: number;
-        comment_ids: number[]; // 用户关联的留言，与留言为一对多关系
-        related_post_ids: number[]; // 用户关联的文章，与文章为多对多关系
+        @ApiProperty({ description: '用户id' })
+        id: string;
+        @ApiProperty({ description: '用户关联的留言ids' })
+        comment_ids: string[]; // 用户关联的留言，与留言为一对多关系
+        @ApiProperty({ description: '用户关联的文章ids' })
+        related_post_ids: string[]; // 用户关联的文章，与文章为多对多关系
     }
     export class createUserDto
-        extends PickType(superUserProfile, ['nickname', 'email']) {
+        extends PickType(basicUserDto, ['nickname', 'email']) {
         @ApiProperty({ description: '密码' })
         password: string;
     }

@@ -1,10 +1,10 @@
-import { PostDto, userDto, commentDto } from 'dto/index.dto';
+import { PostDto, userDto, CommentDto } from 'dto/index.dto';
 export class Example {
 	user: userDto.basicUserDto = {
-		id: 524,
-		comment_ids: [45],
+		id: '524',
+		comment_ids: ['45'],
 		nickname: 'Tom',
-		related_post_ids: [4, 5],
+		related_post_ids: ['4', '5'],
 		email: '545436@qq.com',
 		avatar: '123.jpg',
 	}
@@ -17,15 +17,16 @@ export class Example {
 			'email': 'test@qq.com',
 			'notice': '2.1版本敬请期待喔',
 		},
-		'moment_ids': [121],
-		'word_ids': [544]
+		'moment_ids': ['121'],
+		'word_ids': ['544']
 	}
-	commentListItem: commentDto.basicCommentDto = {
-		id: 1212,
+	commentListItem: CommentDto.basicCommentDto = {
+		id: '1212',
 		content: '你好啊',
 		created_at: '3 days ago',
 		related_user: this.user,
-		children: []
+		children: [],
+		related_post_id: '564a'
 	};
 	postListItem: PostDto.basicPostDto = {
 		id: '12',

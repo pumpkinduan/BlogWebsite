@@ -41,6 +41,7 @@ export namespace PostInterface {
 // 用户后端，生成swagger api文档
 export namespace PostDto {
 	export class basicPostDto implements PostInterface.basicPostInterface {
+		@ApiProperty({ description: '文章id' })
 		id: string;
 		@ApiProperty({ description: '封面地址' })
 		coverUrl: string;
