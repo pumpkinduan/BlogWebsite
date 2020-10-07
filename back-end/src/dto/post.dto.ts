@@ -1,4 +1,4 @@
-import { commentDto } from './comment.dto';
+import { CommentDto } from './comment.dto';
 import { ApiProperty, PickType } from "@nestjs/swagger";
 type basicPostString = Record<'coverUrl' | 'title' | 'createdAt' | 'id', string>;
 type basicPostNumber = Record<
@@ -24,7 +24,7 @@ export namespace PostInterface {
 		content: string;
 		description: string;
 		tags: string[];
-		comments: commentDto.basicCommentDto[]; // 一篇文章下关联的留言，与留言为一对多关系
+		comments: CommentDto.basicCommentDto[]; // 一篇文章下关联的留言，与留言为一对多关系
 	}
 	export type createPostInterface = Pick<
 		detailPostInterface,
@@ -68,7 +68,7 @@ export namespace PostDto {
 		@ApiProperty({ description: '标签' })
 		tags: string[];
 		@ApiProperty({ description: '留言' })
-		comments: commentDto.basicCommentDto[]; // 一篇文章下关联的留言，与留言为一对多关系
+		comments: CommentDto.basicCommentDto[]; // 一篇文章下关联的留言，与留言为一对多关系
 	}
 	export class createPostDto extends PickType(detailPostDto, ['content', 'description', 'tags', 'author', 'status', 'coverUrl', 'title']) { }
 	export class updatePostDto extends createPostDto { }
