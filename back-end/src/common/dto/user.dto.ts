@@ -8,7 +8,7 @@ export namespace UserDto {
         @ApiProperty({ description: '头像地址' })
         readonly avatar: string;
         @ApiPropertyOptional({ description: '用户级别', default: UserInterface.ROLE.BasicUser, enum: UserInterface.ROLE, required: false })
-        readonly role: UserInterface.ROLE.BasicUser
+        readonly role: UserInterface.ROLE
         @ApiProperty({ description: '用户昵称' })
         readonly nickname: string;
         @ApiProperty({ description: '用户id' })
@@ -20,12 +20,12 @@ export namespace UserDto {
     }
     export class SuperUserDto implements UserInterface.SuperUser {
         @ApiProperty({ description: '用户级别' })
-        readonly role: UserInterface.ROLE.SuperUser
-        readonly profiles: UserInterface.SuperUserProfile;
+        readonly role: UserInterface.ROLE
+        readonly profiles?: UserInterface.SuperUserProfile;
         @ApiProperty({ description: '我发布的文章的id' })
-        readonly moment_ids: string[];
+        readonly moment_ids?: string[];
         @ApiProperty({ description: '给我的留言id' })
-        readonly word_ids: string[];
+        readonly word_ids?: string[];
     }
     export class CreateUserDto
         extends PickType(BasicUserDto, ['nickname', 'email', 'role']) {

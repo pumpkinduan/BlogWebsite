@@ -17,7 +17,8 @@ export namespace CommentDto {
         @ApiProperty({ description: '留言的用户' })
         readonly related_user: UserDto.BasicUserDto; // 留言关联的用户，与用户为一对一关系
         @ApiProperty({ description: '子留言 => 回复' })
-        readonly children: BasicCommentDto[] // 回复
+        // readonly children: BasicCommentDto[] // 回复
+        readonly children: string[]
         @ApiProperty({ description: '留言的文章' })
         readonly related_post_id: string;
     }

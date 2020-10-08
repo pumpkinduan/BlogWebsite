@@ -8,19 +8,19 @@ import { exampleInstance } from "common/example";
 export class UserController {
     @ApiOperation({ description: '获取所有普通用户' })
     @Get('/basic')
-    getUsers(): UserDto.BasicUserDto[] {
+    getUsers(): UserInterface.BasicUser[] {
         return [exampleInstance.basicUser]
     }
 
     @ApiOperation({ description: '获取所有管理员' })
     @Get('super')
-    getSuperUsers(): UserDto.SuperUserDto[] {
+    getSuperUsers(): UserInterface.SuperUser[] {
         return [exampleInstance.superUser]
     }
 
     @ApiOperation({ description: '创建用户, 管理员或普通用户' })
     @Post('/create')
-    createUser(@Body() createUserDto: UserDto.CreateUserDto): UserDto.BasicUserDto | UserDto.SuperUserDto | any {
+    createUser(@Body() createUserDto: UserDto.CreateUserDto): UserInterface.BasicUser | UserInterface.SuperUser | any {
         console.log(createUserDto);
 
         if (createUserDto.role === UserInterface.ROLE.BasicUser) {

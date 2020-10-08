@@ -34,7 +34,8 @@ export namespace PostDto {
 		@ApiProperty({ description: '标签' })
 		readonly tags: string[];
 		@ApiProperty({ description: '留言' })
-		readonly comments: CommentInterface.BasicComment[]; // 一篇文章下关联的留言，与留言为一对多关系
+		// readonly comments: CommentInterface.BasicComment[]; // 一篇文章下关联的留言，与留言为一对多关系
+		readonly comments: string[]
 	}
 	export class CreatePostDto extends PickType(DetailPostDto, ['content', 'description', 'tags', 'author', 'status', 'coverUrl', 'title']) { }
 	export class UpdatePostDto extends CreatePostDto { }

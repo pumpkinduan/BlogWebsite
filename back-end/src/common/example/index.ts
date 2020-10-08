@@ -55,7 +55,7 @@ export class Example {
 		downloads: 88,
 		description: 'hs',
 		tags: ['js', 'nest'],
-		comments: [this.commentListItem],
+		comments: ['5'],
 	};
 
 }

@@ -23,7 +23,9 @@ export namespace PostInterface {
         content: string;
         description: string;
         tags: string[];
-        comments: CommentInterface.BasicComment[]; // 一篇文章下关联的留言，与留言为一对多关系
+        // comments: CommentInterface.BasicComment[]; // 一篇文章下关联的留言，与留言为一对多关系
+        comments: string[]
+
     }
     export type CreatePost = Pick<
         DetailPost,
