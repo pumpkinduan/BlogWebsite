@@ -8,7 +8,7 @@ export class PostController {
 
 	@ApiOperation({ description: '创建文章' })
 	@Post('/create')
-	createPost(@Body() createPostDto: PostDto.createPostDto) {
+	createPost(@Body() createPostDto: PostDto.CreatePostDto) {
 		return {
 			success: true,
 		};
@@ -16,19 +16,19 @@ export class PostController {
 
 	@ApiOperation({ description: '获取文章列表' })
 	@Get()
-	getPosts(@Query('page') page: number): PostDto.basicPostDto[] {
+	getPosts(@Query('page') page: number): PostDto.BasicPostDto[] {
 		return [exampleInstance.postListItem];
 	}
 
 	@ApiOperation({ description: '获取文章详情' })
 	@Get(':id')
-	getPostDetail(@Param('id') id: string): PostDto.detailPostDto {
+	getPostDetail(@Param('id') id: string): PostDto.DetailPostDto {
 		return exampleInstance.postDetail;
 	}
 
 	@ApiOperation({ description: '获取文章下的留言列表' })
 	@Get(':id/comments')
-	getPostComments(@Param('id') id: string): CommentDto.basicCommentDto[] {
+	getPostComments(@Param('id') id: string): CommentDto.BasicCommentDto[] {
 		return [exampleInstance.commentListItem];
 	}
 
@@ -43,7 +43,7 @@ export class PostController {
 
 	@ApiOperation({ description: '更新文章' })
 	@Put(':id')
-	updatePost(@Body() updatePostDto: PostDto.updatePostDto, @Param() id: string) {
+	updatePost(@Body() updatePostDto: PostDto.UpdatePostDto, @Param() id: string) {
 		return {
 			success: true,
 		}

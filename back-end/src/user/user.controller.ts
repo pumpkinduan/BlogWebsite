@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { UserDto } from "dto/index.dto";
+import { UserInterface } from 'interfaces/index.interface'
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { exampleInstance } from "example";
 @Controller('users')
@@ -20,10 +21,12 @@ export class UserController {
     @ApiOperation({ description: '创建用户, 管理员或普通用户' })
     @Post('/create')
     createUser(@Body() createUserDto: UserDto.CreateUserDto): UserDto.BasicUserDto | UserDto.SuperUserDto | any {
-        if (createUserDto.role === UserDto.ROLE.BasicUser) {
+        console.log(createUserDto);
+
+        if (createUserDto.role === UserInterface.ROLE.BasicUser) {
             return exampleInstance.basicUser;
         }
-        if (createUserDto.role === UserDto.ROLE.SuperUser) {
+        if (createUserDto.role === UserInterface.ROLE.SuperUser) {
             return exampleInstance.superUser;
         }
         return {
@@ -35,8 +38,8 @@ export class UserController {
     @ApiOperation({ description: '删除普通用户' })
     @Delete(':id')
     deleteUser(@Param() id: string) {
-        return {
-            success: true
-        }
+        // return {
+        //     success: true
+        // }
     }
 }
