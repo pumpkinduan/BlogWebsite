@@ -13,9 +13,7 @@
     "incremental": true,
     "paths": {
       "@src": ["./*"],
-      "@dto": ["./dto"],
-      "@example": ["./example"],
-      "@interface": ["./interfaces"]
+      "@common": ["./common"],
     },
   }
 }

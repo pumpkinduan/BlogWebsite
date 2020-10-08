@@ -1,4 +1,4 @@
-import { CommentInterface, PostInterface } from 'interfaces/index.interface'
+import { CommentInterface, PostInterface } from 'common/interfaces/index.interface'
 import { ApiProperty, PickType } from "@nestjs/swagger";
 type basicPostString = Record<'coverUrl' | 'title' | 'createdAt' | 'id', string>;
 type basicPostNumber = Record<

@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { UserDto } from "dto/index.dto";
-import { UserInterface } from 'interfaces/index.interface'
+import { UserDto } from "common/dto/index.dto";
+import { UserInterface } from 'common/interfaces/index.interface'
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { exampleInstance } from "example";
+import { exampleInstance } from "common/example";
 @Controller('users')
 @ApiTags('用户群')
 export class UserController {

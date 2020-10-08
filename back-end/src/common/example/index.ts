@@ -1,4 +1,4 @@
-import { PostInterface, UserInterface, CommentInterface } from 'interfaces/index.interface';
+import { PostInterface, UserInterface, CommentInterface } from 'common/interfaces/index.interface';
 export class Example {
 	basicUser: UserInterface.BasicUser = {
 		role: UserInterface.ROLE.BasicUser,

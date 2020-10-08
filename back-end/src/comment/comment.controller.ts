@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { CommentDto } from "dto/index.dto";
-import { CommentInterface } from "interfaces/index.interface";
-import { exampleInstance } from "example";
+import { CommentDto } from "common/dto/index.dto";
+import { CommentInterface } from "common/interfaces/index.interface";
+import { exampleInstance } from "common/example";
 @Controller('comments')
 @ApiTags('留言')
 export class CommentController {

@@ -1,6 +1,6 @@
 import { ApiProperty, PickType } from "@nestjs/swagger";
 import { UserDto } from './user.dto';
-import { CommentInterface } from 'interfaces/index.interface'
+import { CommentInterface } from 'common/interfaces/index.interface'
 export namespace CommentDto {
     export class BasicCommentDto implements CommentInterface.BasicComment {
         constructor(obj: CommentInterface.BasicComment) {

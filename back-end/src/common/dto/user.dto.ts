@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional, PickType } from "@nestjs/swagger";
-import { UserInterface } from 'interfaces/index.interface'
+import { UserInterface } from 'common/interfaces/index.interface'
 // 管理员DTO
 export namespace UserDto {
     export class BasicUserDto implements UserInterface.BasicUser {
