@@ -1,7 +1,7 @@
-import { PostDto, UserDto, CommentDto } from 'dto/index.dto';
+import { PostInterface, UserInterface, CommentInterface } from 'interfaces/index.interface';
 export class Example {
-	basicUser: UserDto.BasicUserDto = {
-		role: UserDto.ROLE.BasicUser,
+	basicUser: UserInterface.BasicUser = {
+		role: UserInterface.ROLE.BasicUser,
 		id: '524',
 		comment_ids: ['45'],
 		nickname: 'Tom',
@@ -9,8 +9,8 @@ export class Example {
 		email: '545436@qq.com',
 		avatar: '123.jpg',
 	}
-	superUser: UserDto.SuperUserDto = {
-		role: UserDto.ROLE.SuperUser,
+	superUser: UserInterface.SuperUser = {
+		role: UserInterface.ROLE.SuperUser,
 		profiles: {
 			nickname: 'Pumpkin',
 			github: 'pumpkinduan.github',
@@ -23,7 +23,7 @@ export class Example {
 		'moment_ids': ['121'],
 		'word_ids': ['544']
 	}
-	commentListItem: CommentDto.basicCommentDto = {
+	commentListItem: CommentInterface.BasicComment = {
 		id: '1212',
 		content: '你好啊',
 		created_at: '3 days ago',
@@ -31,7 +31,7 @@ export class Example {
 		children: [],
 		related_post_id: '564a'
 	};
-	postListItem: PostDto.basicPostDto = {
+	postListItem: PostInterface.BasicPost = {
 		id: '12',
 		coverUrl:
 			'https://2heng.xin/wp-content/uploads//2019/12/2572384-1024x640.jpg',
@@ -41,7 +41,7 @@ export class Example {
 		visitors: 12,
 		downloads: 88,
 	};
-	postDetail: PostDto.detailPostDto = {
+	postDetail: PostInterface.DetailPost = {
 		id: '11',
 		coverUrl:
 			'https://2heng.xin/wp-content/uploads//2019/12/2572384-1024x640.jpg',
@@ -50,7 +50,7 @@ export class Example {
 		likes: 1235,
 		visitors: 123,
 		content: 'sof',
-		status: ['published', 'drafted'],
+		status: 'published',
 		author: 'Pumpkin',
 		downloads: 88,
 		description: 'hs',

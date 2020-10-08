@@ -14,7 +14,8 @@
     "paths": {
       "@src": ["./*"],
       "@dto": ["./dto"],
-      "@example": ["./example"]
+      "@example": ["./example"],
+      "@interface": ["./interfaces"]
     },
   }
 }

@@ -1,4 +1,4 @@
-import { ApiProperty, PickType } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, PickType } from "@nestjs/swagger";
 // 管理员DTO
 export namespace UserDto {
     export enum ROLE {
@@ -11,7 +11,7 @@ export namespace UserDto {
         email: string;
         @ApiProperty({ description: '头像地址' })
         avatar: string;
-        @ApiProperty({ description: '用户级别', default: ROLE.BasicUser, enum: ROLE, required: false })
+        @ApiPropertyOptional({ description: '用户级别', default: ROLE.BasicUser, enum: ROLE, required: false })
         role: ROLE.BasicUser
         @ApiProperty({ description: '用户昵称' })
         nickname: string;
@@ -49,32 +49,3 @@ export namespace UserDto {
 
 }
 
-
-
-export namespace userInterface {
-    export enum ROLE {
-        BasicUser = 'basic',
-        SuperUser = 'super'
-    }
-    export interface basicUserInterface
-        extends Record<'nickname' | 'email' | 'avatar', string> {
-        id: string;
-        role: ROLE.BasicUser;
-        comment_ids: string[]; // 用户关联的留言，与留言为一对多关系
-        related_post_ids: string[]; // 用户关联的文章，与文章为多对多关系
-    }
-    export interface superUserProfile extends Pick<basicUserInterface, 'nickname' | 'email' | 'avatar'> {
-        github: string;
-        brief: string;
-        notice?: string;
-    }
-    export interface superUserInterface {
-        role: ROLE.SuperUser;
-        profiles: superUserProfile;
-        moment_ids: string[]; // 文章id
-        word_ids: string[]; // 给我的留言id
-    }
-    export interface createUserInterface extends Pick<basicUserInterface, 'nickname' | 'email' | 'role'> {
-        password: string;
-    }
-}
