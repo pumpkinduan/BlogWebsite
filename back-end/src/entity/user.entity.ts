@@ -1,9 +1,6 @@
 import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
 import { UserInterface } from 'common/interfaces/index.interface'
 import { Comment } from './comment.entity'
-type NeverPick<T, U> = {
-    [P in Exclude<keyof T, U>]: T[P];
-};
 @Entity()
 export class User {
     @PrimaryColumn()

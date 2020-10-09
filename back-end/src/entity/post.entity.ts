@@ -1,9 +1,7 @@
 import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
 import { PostInterface } from 'common/interfaces/index.interface'
 import { Comment } from './comment.entity'
-type NeverPick<T, U> = {
-    [P in Exclude<keyof T, U>]: T[P];
-};
+import { NeverPick } from 'common/generic'
 @Entity()
 export class Post {
 

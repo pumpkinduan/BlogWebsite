@@ -12,4 +12,8 @@ export class PostService {
     async create(createPost: Post): Promise<void> {
         await this.postRepository.save(createPost);
     }
+
+    async findOne(id: string): Promise<Post> {
+        return await this.postRepository.findOne(id);
+    }
 }
