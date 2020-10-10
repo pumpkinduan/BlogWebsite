@@ -5,8 +5,10 @@ import { InjectRepository } from '@nestjs/typeorm'
 @Injectable()
 export class PostService {
     constructor(@InjectRepository(Post) readonly postRepository: Repository<Post>) { }
-    async findAll(): Promise<Post[]> {
-        return await this.postRepository.find();
+    async findAndCount(page: number, pageSize: number): Promise<[Post[], number]> {
+        // 分页
+        const offset = page * pageSize - pageSize;
+        return await this.postRepository.findAndCount({ skip: offset, take: pageSize });
     }
 
     async create(createPost: Post): Promise<void> {
