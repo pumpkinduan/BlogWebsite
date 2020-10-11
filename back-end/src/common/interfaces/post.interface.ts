@@ -1,4 +1,3 @@
-import { CommentInterface } from './comment.interface';
 type basicPostString = Record<'coverUrl' | 'title' | 'createdAt' | 'id', string>;
 type basicPostNumber = Record<
     'likes' | 'visitors' | 'downloads',
