@@ -4,8 +4,10 @@ import { IsDefined } from 'class-validator'
 export namespace PostDto {
 	export class CreatePostDto implements PostInterface.CreatePost {
 		@ApiProperty({ description: '封面地址' })
+		@IsDefined()
 		readonly coverUrl: string;
 		@ApiProperty({ description: '标题' })
+		@IsDefined()
 		readonly title: string;
 		@ApiProperty({ description: '状态', enum: PostInterface.STATUS })
 		@IsDefined()
