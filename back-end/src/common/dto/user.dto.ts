@@ -1,5 +1,6 @@
-import { ApiProperty, ApiPropertyOptional, PickType } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { UserInterface } from 'common/interfaces/index.interface'
+import { IsDefined, IsEnum } from 'class-validator'
 // 管理员DTO
 export namespace UserDto {
     export class BasicUserDto implements UserInterface.BasicUser {
@@ -27,9 +28,18 @@ export namespace UserDto {
         @ApiProperty({ description: '给我的留言id' })
         readonly word_ids?: string[];
     }
-    export class CreateUserDto
-        extends PickType(BasicUserDto, ['nickname', 'email', 'role']) {
+    export class CreateUserDto implements UserInterface.CreateUser {
+        @ApiProperty({ description: '邮箱' })
+        @IsDefined()
+        readonly email: string;
+        @ApiProperty({ description: '用户昵称' })
+        @IsDefined()
+        readonly nickname: string;
+        @ApiProperty({ description: '用户级别' })
+        @IsEnum(UserInterface.ROLE)
+        readonly role: UserInterface.ROLE
         @ApiProperty({ description: '密码' })
+        @IsDefined()
         readonly password: string;
     }
 
