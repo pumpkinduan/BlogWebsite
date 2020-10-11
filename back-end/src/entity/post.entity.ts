@@ -1,34 +1,41 @@
-import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToMany, CreateDateColumn } from 'typeorm';
 import { PostInterface } from 'common/interfaces/index.interface'
 import { Comment } from './comment.entity'
 import { NeverPick } from 'common/generic'
 @Entity()
 export class Post {
-
-    @PrimaryColumn()
+    @PrimaryColumn({ generated: 'uuid', })
     id: string;
     @Column()
     status: PostInterface.status;
     @Column({ default: 'Pumpkin' })
-    author?: string;
+    author: string;
     @Column('text')
     content: string;
     @Column()
     description: string;
-    @Column()
-    tags: string; // 'js, ts, css'
+
+    // 会自动转换数组为字符串
+    @Column('simple-array')
+    tags: string[]; // 'js, ts, css'
     @OneToMany(type => Comment, comment => comment.related_post)
     comments?: Comment[];
     @Column()
     coverUrl: string;
     @Column()
     title: string;
-    // @Column('timestamp without time zone')
-    // createdAt: string;
+
+    //自动生成 
+    @CreateDateColumn({ comment: '创建时间' })
+    createdAt: string;
+    @CreateDateColumn({ comment: '更新时间' })
+    updatedAt?: string;
+    @CreateDateColumn({ comment: '删除时间' })
+    deletedAt: string;
     @Column({ default: 0 })
-    likes?: number;
+    likes: number;
     @Column({ default: 0 })
-    visitors?: number;
+    visitors: number;
     @Column({ default: 0 })
-    downloads?: number;
+    downloads: number;
 }
