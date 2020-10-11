@@ -5,5 +5,5 @@ export interface exceptionResultInterface {
     time: string,
     path: string,
     error: string;
-    message: string;
+    message: string | string[];
 }
