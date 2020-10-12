@@ -1,10 +1,10 @@
-import { Entity, Column, PrimaryColumn, OneToMany, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToMany, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
 import { PostInterface } from 'common/interfaces/index.interface'
 import { Comment } from './comment.entity'
 import { NeverPick } from 'common/generic'
 @Entity()
 export class Post {
-    @PrimaryColumn({ generated: 'uuid', })
+    @PrimaryColumn({ generated: 'uuid' })
     id: string;
     @Column()
     status: PostInterface.status;
@@ -28,9 +28,9 @@ export class Post {
     //自动生成 
     @CreateDateColumn({ comment: '创建时间' })
     createdAt: string;
-    @CreateDateColumn({ comment: '更新时间' })
+    @UpdateDateColumn({ comment: '更新时间' })
     updatedAt?: string;
-    @CreateDateColumn({ comment: '删除时间' })
+    @DeleteDateColumn({ comment: '删除时间' })
     deletedAt: string;
     @Column({ default: 0 })
     likes: number;

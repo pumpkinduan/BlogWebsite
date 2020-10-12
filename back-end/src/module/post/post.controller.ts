@@ -32,10 +32,10 @@ export class PostController {
 		@Body(new ValidationPipe({ transform: true }))
 		createPostDto: PostDto.CreatePostDto,
 	): Promise<ResultInterface> {
-		await this.postService.create(createPostDto);
+		const post = await this.postService.create(createPostDto);
 		return {
 			success: true,
-			data: [],
+			data: [post],
 			statusCode: HttpStatus.OK,
 			message: SuccessMessage.Post.CREATE,
 		};
@@ -44,8 +44,8 @@ export class PostController {
 	@ApiOperation({ description: '获取文章列表' })
 	@Get()
 	async getPosts(
-		@Query(new ParseIntPipe()) page = 1,
-		@Query(new ParseIntPipe()) pageSize = 10,
+		@Query('page') page = 1,
+		@Query('pageSize') pageSize = 10,
 	): Promise<ResultInterface> {
 		const posts = await this.postService.findAndCount(page, pageSize);
 		return {
@@ -59,7 +59,7 @@ export class PostController {
 	@ApiOperation({ description: '获取文章详情' })
 	@Get(':id')
 	async getPostDetail(@Param('id', new ParseUUIDPipe()) id: string): Promise<ResultInterface> {
-		const posts = await this.postService.findOne(id);
+		const posts = await this.postService.findOneById(id);
 		return {
 			statusCode: HttpStatus.OK,
 			data: posts,
@@ -70,15 +70,17 @@ export class PostController {
 
 	@ApiOperation({ description: '获取文章下的留言列表' })
 	@Get(':id/comments')
-	getPostComments(@Param('id', new ParseUUIDPipe()) id: string): CommentInterface.BasicComment[] {
+	getPostComments(@Param('id') id: string): CommentInterface.BasicComment[] {
 		return [exampleInstance.commentListItem];
 	}
 
 	@ApiOperation({ description: '删除文章' })
 	@Delete(':id')
-	deletePost(@Param('id', new ParseUUIDPipe()) id: string) {
+	async deletePost(@Param('id') id: string) {
+		const res = await this.postService.deleteOneById(id)
 		return {
 			success: true,
+			res
 		};
 	}
 
