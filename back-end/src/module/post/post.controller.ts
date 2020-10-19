@@ -22,6 +22,8 @@ import {
 import { exampleInstance } from 'common/example';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PostService } from './post.service';
+import { formatDate } from 'util/index'
+import { Post as PostEntity } from 'entity/post.entity'
 @Controller('posts')
 @ApiTags('文章')
 export class PostController {
@@ -32,7 +34,8 @@ export class PostController {
 		@Body(new ValidationPipe({ transform: true }))
 		createPostDto: PostDto.CreatePostDto,
 	): Promise<ResultInterface> {
-		const post = await this.postService.create(createPostDto);
+		let post = await this.postService.create(createPostDto);
+		post = formatDate<PostEntity>(post, ['createdAt', 'deletedAt', 'updatedAt']) as PostEntity
 		return {
 			success: true,
 			data: [post],
@@ -48,6 +51,7 @@ export class PostController {
 		@Query('pageSize') pageSize = 10,
 	): Promise<ResultInterface> {
 		const posts = await this.postService.findAndCount(page, pageSize);
+		posts[0] = formatDate<PostEntity>(posts[0], ['createdAt', 'deletedAt', 'updatedAt']) as PostEntity[];
 		return {
 			statusCode: HttpStatus.OK,
 			data: posts,
@@ -59,10 +63,11 @@ export class PostController {
 	@ApiOperation({ description: '获取文章详情' })
 	@Get(':id')
 	async getPostDetail(@Param('id', new ParseUUIDPipe()) id: string): Promise<ResultInterface> {
-		const posts = await this.postService.findOneById(id);
+		let post = await this.postService.findOneById(id);
+		post = formatDate<PostEntity>(post, ['createdAt', 'deletedAt', 'updatedAt']) as PostEntity
 		return {
 			statusCode: HttpStatus.OK,
-			data: posts,
+			data: post,
 			message: SuccessMessage.Post.OK,
 			success: true,
 		};
