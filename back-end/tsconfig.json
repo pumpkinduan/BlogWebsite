@@ -15,6 +15,7 @@
       "@src": ["./*"],
       "@module": ["./module"],
       "@common": ["./common"],
+      "@middleware": ["./middleware"]
     },
   }
 }
