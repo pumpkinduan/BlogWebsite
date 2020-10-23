@@ -106,15 +106,21 @@ export class PostController {
 
 	@ApiOperation({ description: '更新文章' })
 	@Put(':id')
-	updatePost(
+	async updatePost(
 		@Body(new ValidationPipe()) updatePostDto: PostDto.UpdatePostDto,
 		@Param('id', new ParseUUIDPipe()) id: string,
-	) {
-		const updatePost = Object.assign(updatePostDto, {
-			tags: updatePostDto.tags.join(),
-		});
+	): Promise<ResultInterface> {
+		let post = await this.postService.update(id, updatePostDto);
+		post = formatDate<PostEntity>(post, [
+			'createdAt',
+			'deletedAt',
+			'updatedAt',
+		]) as PostEntity;
 		return {
 			success: true,
+			data: post,
+			statusCode: HttpStatus.OK,
+			message: SuccessMessage.Post.UPDATE
 		};
 	}
 }
