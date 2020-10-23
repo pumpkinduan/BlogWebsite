@@ -96,11 +96,12 @@ export class PostController {
 
 	@ApiOperation({ description: '删除文章' })
 	@Delete(':id')
-	async deletePost(@Param('id') id: string) {
+	async deletePost(@Param('id') id: string): Promise<ResultInterface> {
 		await this.postService.deleteOneById(id);
 		return {
 			success: true,
-			message: SuccessMessage.Post.DELETE
+			message: SuccessMessage.Post.DELETE,
+			statusCode: HttpStatus.OK,
 		};
 	}
 
