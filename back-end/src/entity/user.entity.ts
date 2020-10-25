@@ -13,7 +13,7 @@ export class User {
     email: string;
     @Column()
     role: UserInterface.ROLE;
-    @OneToMany(type => Comment, comment => comment.related_user)
+    @OneToMany(type => Comment, comment => comment.user)
     comments: Comment[]; // 用户关联的留言，与留言为一对多关系
     // @Column()
     // related_post_ids: string[]; // 用户关联的文章，与文章为多对多关系

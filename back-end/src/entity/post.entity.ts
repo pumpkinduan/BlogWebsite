@@ -18,7 +18,7 @@ export class Post {
     // 会自动转换数组为字符串
     @Column('simple-array')
     tags: string[]; // 'js, ts, css'
-    @OneToMany(type => Comment, comment => comment.related_post)
+    @OneToMany(type => Comment, comment => comment.post)
     comments?: Comment[];
     @Column()
     coverUrl: string;

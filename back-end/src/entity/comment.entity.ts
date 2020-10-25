@@ -14,9 +14,9 @@ export class Comment {
     // @Column('timestamp without time zone')
     // created_at: string;
     @ManyToOne(type => User, user => user.comments)
-    related_user: User; // 留言关联的用户，与用户为一对一关系
+    user: User; // 留言关联的用户，与用户为一对一关系
     // @Column()
     // children: string[] // 回复
     @ManyToOne(type => Post, post => post.comments)
-    related_post: Post;
+    post: Post;
 }
