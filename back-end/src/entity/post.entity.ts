@@ -19,7 +19,7 @@ export class Post {
     @Column('simple-array')
     tags: string[]; // 'js, ts, css'
     @OneToMany(type => Comment, comment => comment.post)
-    comments?: Comment[];
+    comments: Comment[];
     @Column()
     coverUrl: string;
     @Column()

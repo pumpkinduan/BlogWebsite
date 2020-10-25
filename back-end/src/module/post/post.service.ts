@@ -44,9 +44,8 @@ export class PostService {
 		return await this.postRepository.findOne(id);
 	}
 	async findOneById(id: string): Promise<Post> {
-		return await this.postRepository.findOne(id);
+		return await this.postRepository.findOne(id, { relations: ['comments'] });
 	}
-
 	async deleteOneById(id: string): Promise<void> {
 		await this.postRepository.delete(id);
 	}

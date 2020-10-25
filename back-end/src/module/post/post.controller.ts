@@ -70,7 +70,7 @@ export class PostController {
 	}
 
 	@ApiOperation({ description: '获取文章详情' })
-	@Get(':id')
+	@Get(':id/comments')
 	async getPostDetail(
 		@Param('id', new ParseUUIDPipe()) id: string,
 	): Promise<ResultInterface> {
@@ -86,12 +86,6 @@ export class PostController {
 			message: SuccessMessage.Post.OK,
 			success: true,
 		};
-	}
-
-	@ApiOperation({ description: '获取文章下的留言列表' })
-	@Get(':id/comments')
-	getPostComments(@Param('id') id: string): CommentInterface.BasicComment[] {
-		return [exampleInstance.commentListItem];
 	}
 
 	@ApiOperation({ description: '删除文章' })

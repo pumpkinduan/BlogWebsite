@@ -26,10 +26,10 @@ export class Example {
 	commentListItem: CommentInterface.BasicComment = {
 		id: '1212',
 		content: '你好啊',
-		created_at: '3 days ago',
-		related_user: this.basicUser,
+		createdAt: '3 days ago',
+		user: this.basicUser,
 		children: [],
-		related_post_id: '564a'
+		// related_post_id: '564a'
 	};
 	postListItem: PostInterface.BasicPost = {
 		id: '12',
