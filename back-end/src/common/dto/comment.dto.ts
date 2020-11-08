@@ -15,7 +15,7 @@ export namespace CommentDto {
         @ApiProperty({ description: '留言的文章id' })
         readonly postId: string;
         @IsDefined()
-        @ApiProperty({ description: '留言id' })
+        @ApiProperty({ description: '回复id' })
         readonly replyId: string;
     }
 }

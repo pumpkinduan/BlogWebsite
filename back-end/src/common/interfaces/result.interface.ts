@@ -15,6 +15,7 @@ export namespace SuccessMessage {
     export enum Comment {
         CREATE = '成功创建留言',
         DELETE = '成功删除留言',
+        LISTS = '成功获取留言列表',
         OK = 'OK'
     }
     export enum User {

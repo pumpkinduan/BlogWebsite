@@ -14,4 +14,19 @@ export class CommentService {
         const post = await this.PostRepository.findOne(createComment.postId);
         return await this.commentRepository.save(Object.assign(createComment, { children, post }));
     }
+
+    async deleteOneById(id: string): Promise<void> {
+        await this.commentRepository.delete(id);
+    }
+
+    async findAndCount(page: number,
+        pageSize: number): Promise<[Comment[], number]> {
+        // 分页
+        const offset = page * pageSize - pageSize;
+        return await this.commentRepository.findAndCount({
+            skip: offset,
+            take: pageSize,
+            relations: ['post', 'user']
+        });
+    }
 }
