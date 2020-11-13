@@ -1,6 +1,6 @@
-import { Entity, Column, PrimaryColumn, OneToMany, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToMany, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, ManyToMany } from 'typeorm';
 import { PostInterface } from 'common/interfaces/index.interface'
-import { Comment } from './comment.entity'
+import { Comment, User } from './index'
 import { NeverPick } from 'common/generic'
 @Entity()
 export class Post {
@@ -20,6 +20,8 @@ export class Post {
     tags: string[]; // 'js, ts, css'
     @OneToMany(type => Comment, comment => comment.post)
     comments: Comment[];
+    @ManyToMany(type => User, user => user.posts)
+    users: User[];
     @Column()
     coverUrl: string;
     @Column()

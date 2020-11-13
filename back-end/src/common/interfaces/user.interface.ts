@@ -1,3 +1,5 @@
+import { CommentInterface, PostInterface } from "common/interfaces/index.interface";
+
 export namespace UserInterface {
     export enum ROLE {
         BasicUser = 'basic',
@@ -7,8 +9,8 @@ export namespace UserInterface {
         extends Record<'nickname' | 'email' | 'avatar', string> {
         id: string;
         role: ROLE;
-        comment_ids: string[]; // 用户关联的留言，与留言为一对多关系
-        related_post_ids: string[]; // 用户关联的文章，与文章为多对多关系
+        comments: CommentInterface.BasicComment[]; // 用户关联的留言，与留言为一对多关系
+        posts: PostInterface.BasicPost[]; // 用户关联的文章，与文章为多对多关系
     }
     export interface SuperUserProfile extends Pick<BasicUser, 'nickname' | 'email' | 'avatar'> {
         github: string;
