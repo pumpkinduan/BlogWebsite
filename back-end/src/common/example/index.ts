@@ -1,14 +1,23 @@
 import { PostInterface, UserInterface, CommentInterface } from 'common/interfaces/index.interface';
 export class Example {
-	basicUser: UserInterface.BasicUser = {
-		role: UserInterface.ROLE.BasicUser,
-		id: '524',
-		comment_ids: ['45'],
-		nickname: 'Tom',
-		related_post_ids: ['4', '5'],
-		email: '545436@qq.com',
-		avatar: '123.jpg',
-	}
+	// basicUser: UserInterface.BasicUser = {
+	// 	role: UserInterface.ROLE.BasicUser,
+	// 	id: '524',
+	// 	comments: [{
+	// 		'children': [],
+	// 		'content': 'example',
+	// 		'createdAt': '2 days age',
+	// 		'id': '1234141254',
+	// 		'user': {
+	// 			''
+	// 		}
+
+	// 	}],
+	// 	nickname: 'Tom',
+	// 	related_post_ids: ['4', '5'],
+	// 	email: '545436@qq.com',
+	// 	avatar: '123.jpg',
+	// }
 	superUser: UserInterface.SuperUser = {
 		role: UserInterface.ROLE.SuperUser,
 		profiles: {
@@ -23,14 +32,14 @@ export class Example {
 		'moment_ids': ['121'],
 		'word_ids': ['544']
 	}
-	commentListItem: CommentInterface.BasicComment = {
-		id: '1212',
-		content: '你好啊',
-		createdAt: '3 days ago',
-		user: this.basicUser,
-		children: [],
-		// related_post_id: '564a'
-	};
+	// commentListItem: CommentInterface.BasicComment = {
+	// 	id: '1212',
+	// 	content: '你好啊',
+	// 	createdAt: '3 days ago',
+	// 	user: this.basicUser,
+	// 	children: [],
+	// 	// related_post_id: '564a'
+	// };
 	postListItem: PostInterface.BasicPost = {
 		id: '12',
 		coverUrl:

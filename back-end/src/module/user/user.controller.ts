@@ -1,15 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Inject, ValidationPipe } from '@nestjs/common';
 import { UserDto } from "common/dto/index.dto";
-import { UserInterface } from 'common/interfaces/index.interface'
+import { ResultInterface, UserInterface, SuccessMessage } from 'common/interfaces/index.interface'
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { exampleInstance } from "common/example";
+import { UserService } from 'module/user/user.service'
 @Controller('users')
 @ApiTags('用户群')
 export class UserController {
+    constructor(
+        @Inject(UserService) readonly userRepository: UserService,
+    ) { }
     @ApiOperation({ description: '获取所有普通用户' })
     @Get('/basic')
     getUsers(): UserInterface.BasicUser[] {
-        return [exampleInstance.basicUser]
+        return []
     }
 
     @ApiOperation({ description: '获取所有管理员' })
@@ -20,18 +24,23 @@ export class UserController {
 
     @ApiOperation({ description: '创建用户, 管理员或普通用户' })
     @Post('/create')
-    createUser(@Body() createUserDto: UserDto.CreateUserDto): UserInterface.BasicUser | UserInterface.SuperUser | any {
-        console.log(createUserDto);
-
+    async createUser(@Body(new ValidationPipe({ transform: true })) createUserDto: UserDto.CreateUserDto): Promise<ResultInterface> {
+        console.log('createUserDto', createUserDto);
+        const data = await this.userRepository.create(createUserDto);
         if (createUserDto.role === UserInterface.ROLE.BasicUser) {
-            return exampleInstance.basicUser;
+            // 创建普通用户
+            Reflect.deleteProperty(data, 'password');
+            Reflect.deleteProperty(data, 'profiles');
         }
         if (createUserDto.role === UserInterface.ROLE.SuperUser) {
-            return exampleInstance.superUser;
+            // 创建管理员
+            // return exampleInstance.superUser;
         }
         return {
-            success: false,
-            error: '参数错误'
+            statusCode: HttpStatus.OK,
+            message: SuccessMessage.User.CREATE,
+            data: data,
+            success: true
         }
     }
 

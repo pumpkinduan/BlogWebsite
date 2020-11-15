@@ -1,9 +1,10 @@
 import { CommentInterface, PostInterface } from "common/interfaces/index.interface";
 
+// 后台管理系统的用户表，有控制编辑查看的权限
 export namespace UserInterface {
     export enum ROLE {
-        BasicUser = 'basic',
-        SuperUser = 'super'
+        BasicUser,
+        SuperUser
     }
     export interface BasicUser
         extends Record<'nickname' | 'email' | 'avatar', string> {
