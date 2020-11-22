@@ -32,7 +32,7 @@ export namespace UserDto {
 
         @IsDefined()
         @IsEnum(UserInterface.ROLE)
-        @ApiProperty({ description: '用户级别' })
+        @ApiProperty({ description: '用户级别', enum: UserInterface.ROLE })
         readonly role: UserInterface.ROLE
 
         @IsDefined()
