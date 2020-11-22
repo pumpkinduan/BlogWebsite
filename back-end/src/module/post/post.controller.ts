@@ -3,23 +3,20 @@ import {
 	Controller,
 	Delete,
 	Get,
+	Query,
 	Param,
 	Post,
-	Query,
 	Put,
 	Inject,
 	HttpStatus,
-	ParseIntPipe,
 	ParseUUIDPipe,
 	ValidationPipe,
 } from '@nestjs/common';
 import { PostDto } from 'common/dto/index.dto';
 import {
-	CommentInterface,
 	ResultInterface,
 	SuccessMessage,
 } from 'common/interfaces/index.interface';
-import { exampleInstance } from 'common/example';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PostService } from './post.service';
 import { formatDate } from 'util/index';
