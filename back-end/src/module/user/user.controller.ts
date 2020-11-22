@@ -25,16 +25,11 @@ export class UserController {
     @ApiOperation({ description: '创建用户, 管理员或普通用户' })
     @Post('/create')
     async createUser(@Body(new ValidationPipe({ transform: true })) createUserDto: UserDto.CreateUserDto): Promise<ResultInterface> {
-        console.log('createUserDto', createUserDto);
         const data = await this.userRepository.create(createUserDto);
         if (createUserDto.role === UserInterface.ROLE.BasicUser) {
             // 创建普通用户
             Reflect.deleteProperty(data, 'password');
             Reflect.deleteProperty(data, 'profiles');
-        }
-        if (createUserDto.role === UserInterface.ROLE.SuperUser) {
-            // 创建管理员
-            // return exampleInstance.superUser;
         }
         return {
             statusCode: HttpStatus.OK,
@@ -44,11 +39,14 @@ export class UserController {
         }
     }
 
-    @ApiOperation({ description: '删除普通用户' })
+    @ApiOperation({ description: '删除用户' })
     @Delete(':id')
-    deleteUser(@Param() id: string) {
-        // return {
-        //     success: true
-        // }
+    async deleteUser(@Param() id: string): Promise<ResultInterface> {
+        await this.userRepository.deleteById(id);
+        return {
+            success: true,
+            statusCode: HttpStatus.OK,
+            message: SuccessMessage.User.DELETE
+        }
     }
 }
