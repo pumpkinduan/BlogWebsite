@@ -47,7 +47,7 @@ export class UserController {
 
     @ApiOperation({ description: '删除用户' })
     @Delete(':id')
-    async deleteUser(@Param() id: string): Promise<ResultInterface> {
+    async deleteUser(@Param('id') id: string): Promise<ResultInterface> {
         await this.userRepository.deleteById(id);
         return {
             success: true,
