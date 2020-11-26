@@ -1,4 +1,4 @@
-import { UserInterface } from './user.interface';
+import { UserInterface, PostInterface } from './index.interface';
 export namespace CommentInterface {
     export interface BasicComment {
         id: string;
@@ -6,7 +6,7 @@ export namespace CommentInterface {
         createdAt: string;
         user: UserInterface.BasicUser; // 留言关联的用户，与用户为一对多关系
         children: BasicComment[] // 回复
-        // related_post_id: string;
+        post: PostInterface.BasicPost
     }
     export type CreateComment = Pick<BasicComment, 'content' | 'user'>
 }

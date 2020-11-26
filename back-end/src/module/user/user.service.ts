@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm'
 import { UserDto } from 'common/dto/index.dto'
 import { User } from 'entity'
-import { UserInterface } from 'common/interfaces/index.interface';
+import { ROLE } from 'common/interfaces/index.interface';
 @Injectable()
 export class UserService {
     constructor(@InjectRepository(User) readonly userRepository: Repository<User>) {
@@ -18,7 +18,7 @@ export class UserService {
     async findAndCount(
         page: number,
         pageSize: number,
-        role: UserInterface.ROLE
+        role: ROLE
     ): Promise<[User[], number]> {
         // 分页
         const offset = page * pageSize - pageSize;

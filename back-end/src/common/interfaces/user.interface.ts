@@ -1,28 +1,27 @@
-import { CommentInterface, PostInterface } from "common/interfaces/index.interface";
-
 // 后台管理系统的用户表，有控制编辑查看的权限
+type userId = string;
+type postId = string;
+
+export enum ROLE {
+    BasicUser,
+    SuperUser
+}
 export namespace UserInterface {
-    export enum ROLE {
-        BasicUser,
-        SuperUser
-    }
     export interface BasicUser
-        extends Record<'nickname' | 'email' | 'avatar', string> {
+        extends Record<'nickname' | 'email', string> {
         id: string;
-        role: ROLE;
-        comments: CommentInterface.BasicComment[]; // 用户关联的留言，与留言为一对多关系
-        posts: PostInterface.BasicPost[]; // 用户关联的文章，与文章为多对多关系
+        role: ROLE.BasicUser;
     }
-    export interface SuperUserProfile extends Pick<BasicUser, 'nickname' | 'email' | 'avatar'> {
+    export interface SuperUserProfile extends Pick<BasicUser, 'nickname' | 'email'> {
         github: string;
         brief: string;
         notice?: string;
     }
     export interface SuperUser {
-        role: ROLE;
+        role: ROLE.SuperUser;
         profiles?: SuperUserProfile;
-        moment_ids?: string[]; // 文章id
-        word_ids?: string[]; // 给我的留言id
+        moment_ids?: postId[]; // 文章id
+        word_ids?: userId[]; // 给我的留言id
     }
     export interface CreateUser extends Pick<BasicUser, 'nickname' | 'email' | 'role'> {
         password: string;

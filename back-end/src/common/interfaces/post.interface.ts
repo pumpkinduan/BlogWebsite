@@ -1,3 +1,4 @@
+import { CommentInterface } from 'common/interfaces/index.interface'
 type basicPostString = Record<'coverUrl' | 'title' | 'createdAt' | 'id', string>;
 type basicPostNumber = Record<
     'likes' | 'visitors' | 'downloads',
@@ -14,17 +15,16 @@ export namespace PostInterface {
         DELETED = 'deleted'
     }
     // 文章列表
-    export interface BasicPost extends basicPostString, basicPostNumber { }
+    export interface BasicPost extends basicPostString, basicPostNumber {
+        tags: string[];
+        status: status;
+    }
     // 文章详情
     export interface DetailPost extends BasicPost {
-        status: status;
         author?: string;
         content: string;
         description: string;
-        tags: string[];
-        // comments: CommentInterface.BasicComment[]; // 一篇文章下关联的留言，与留言为一对多关系
-        comments: string[]
-
+        comments: CommentInterface.BasicComment[]; // 一篇文章下关联的留言，与留言为一对多关系
     }
     export type CreatePost = Pick<
         DetailPost,

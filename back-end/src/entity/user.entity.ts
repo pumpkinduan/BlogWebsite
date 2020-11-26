@@ -1,5 +1,5 @@
 import { Entity, Column, PrimaryColumn, OneToMany, ManyToMany } from 'typeorm';
-import { UserInterface } from 'common/interfaces/index.interface'
+import { UserInterface, ROLE } from 'common/interfaces/index.interface'
 import { Comment, Post } from './index'
 @Entity()
 export class User {
@@ -13,7 +13,7 @@ export class User {
     email: string;
 
     @Column()
-    role: UserInterface.ROLE;
+    role: ROLE;
 
     @Column({ nullable: true })
     webUrl: string;

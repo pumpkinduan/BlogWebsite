@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Query, Get, HttpStatus, Param, Post, Inject, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Query, Get, HttpStatus, Param, Post, Inject, ValidationPipe, ParseIntPipe } from '@nestjs/common';
 import { UserDto } from "common/dto/index.dto";
-import { ResultInterface, UserInterface, SuccessMessage } from 'common/interfaces/index.interface'
+import { ResultInterface, SuccessMessage, ROLE } from 'common/interfaces/index.interface'
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserService } from 'module/user/user.service'
 @Controller('users')
@@ -14,9 +14,19 @@ export class UserController {
     async getBasicUsers(
         @Query('page') page = 1,
         @Query('pageSize') pageSize = 10,
-        @Query('role') role: UserInterface.ROLE
+        @Query('role', new ParseIntPipe()) role: ROLE
     ): Promise<ResultInterface> {
-        const data = await this.userRepository.findAndCount(page, pageSize, role)
+        const data = await this.userRepository.findAndCount(page, pageSize, role);
+        data[0].forEach((user) => {
+            if (role === ROLE.BasicUser) {
+                // 普通用户没有 该字段
+                Reflect.deleteProperty(user, 'password');
+                Reflect.deleteProperty(user, 'profiles');
+            }
+            if (role === ROLE.SuperUser) {
+                Reflect.deleteProperty(user, 'webUrl');
+            }
+        })
         return {
             statusCode: HttpStatus.OK,
             success: true,
@@ -28,13 +38,13 @@ export class UserController {
     @Post('/create')
     async createUser(@Body(new ValidationPipe({ transform: true })) createUserDto: UserDto.CreateUserDto): Promise<ResultInterface> {
         const data = await this.userRepository.create(createUserDto);
-        if (createUserDto.role === UserInterface.ROLE.BasicUser) {
+        if (createUserDto.role === ROLE.BasicUser) {
             // 创建普通用户
             Reflect.deleteProperty(data, 'password');
             Reflect.deleteProperty(data, 'profiles');
         }
-        if (createUserDto.role === UserInterface.ROLE.SuperUser) {
-            // 创建普通用户
+        if (createUserDto.role === ROLE.SuperUser) {
+            // 创建超级用户
             Reflect.deleteProperty(data, 'webUrl');
         }
         return {
