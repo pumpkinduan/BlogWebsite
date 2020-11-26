@@ -19,7 +19,7 @@ import {
 } from 'common/interfaces/index.interface';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PostService } from './post.service';
-import { formatDate } from 'util/index';
+import { formatDate } from 'utils';
 import { Post as PostEntity } from 'entity/post.entity';
 @Controller('posts')
 @ApiTags('文章')

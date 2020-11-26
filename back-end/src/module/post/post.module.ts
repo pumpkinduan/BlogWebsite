@@ -11,6 +11,6 @@ import { LoggerMiddleware } from 'middleware'
 })
 export class PostModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleware).forRoutes('posts')
+    // consumer.apply(LoggerMiddleware).forRoutes('posts')
   }
 }
