@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Post } from 'entity/post.entity';
-import { Repository } from 'typeorm';
+import { getConnection, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostInterface } from 'common/interfaces/index.interface';
 @Injectable()
@@ -45,6 +45,8 @@ export class PostService {
 	}
 	async findOneById(id: string): Promise<Post> {
 		return await this.postRepository.findOne(id, { relations: ['comments'] });
+		// this.postRepository.createQueryBuilder('p').select().where().
+		// getConnection().createQueryBuilder().select().where('psot')
 	}
 	async deleteOneById(id: string): Promise<void> {
 		await this.postRepository.delete(id);
