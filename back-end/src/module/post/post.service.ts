@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { Post } from 'entity/post.entity';
-import { getConnection, Repository } from 'typeorm';
+import { Post } from 'entity/index';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PostInterface } from 'common/interfaces/index.interface';
+import { PostInterface, TYPE } from 'common/interfaces/index.interface';
 @Injectable()
 export class PostService {
 	constructor(
@@ -32,21 +32,29 @@ export class PostService {
 	async create(createPost: PostInterface.CreatePost): Promise<Post> {
 		return await this.postRepository.save(createPost);
 	}
-	async update(id: string, updatePost: PostInterface.UpdatePost): Promise<Post> {
-		// const post = await this.postRepository.findOne(id);
-		// Reflect.ownKeys(updatePost).forEach((prop) => {
-		// 	if (post[prop] !== updatePost[prop]) {
-		// 		post[prop] = updatePost[prop];
-		// 	}
-		// })
-		// return await this.postRepository.save(post);
+	async update(
+		id: string,
+		updatePost: PostInterface.UpdatePost,
+	): Promise<Post> {
 		await this.postRepository.update(id, updatePost);
 		return await this.postRepository.findOne(id);
 	}
 	async findOneById(id: string): Promise<Post> {
-		return await this.postRepository.findOne(id, { relations: ['comments'] });
-		// this.postRepository.createQueryBuilder('p').select().where().
-		// getConnection().createQueryBuilder().select().where('psot')
+		const post = await this.postRepository.findOne(id, {
+			relations: ['comments', 'comments.user'],
+		});
+		post.comments.forEach((comment) => {
+			if (Number(comment.user.type) === TYPE.BasicUser) {
+				// 普通用户
+				Reflect.deleteProperty(comment.user, 'password');
+				Reflect.deleteProperty(comment.user, 'profiles');
+			}
+			if (Number(comment.user.type) === TYPE.SuperUser) {
+				// 超级用户
+				Reflect.deleteProperty(comment.user, 'webUrl');
+			}
+		})
+		return post;
 	}
 	async deleteOneById(id: string): Promise<void> {
 		await this.postRepository.delete(id);

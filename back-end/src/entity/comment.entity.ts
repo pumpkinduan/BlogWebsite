@@ -14,12 +14,12 @@ export class Comment {
     @CreateDateColumn({ comment: '创建时间' })
     createdAt: string;
 
-    @ManyToOne(type => User, user => user.comments)
+    @ManyToOne(() => User, user => user.comments)
     user: User; // 留言关联的用户，与用户为多对一关系
 
     @Column({ type: 'simple-array' })
     children: replyId[]// 回复
 
-    @ManyToOne(type => Post, post => post.comments)
+    @ManyToOne(() => Post, post => post.comments)
     post: Post;
-}
+}   

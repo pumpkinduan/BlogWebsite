@@ -14,14 +14,14 @@ export class LoggerMiddleware implements NestMiddleware {
             method: req.method,
             hostname: req.hostname,
             ip: req.ip,
-
+            body: req.body,
+            params: req.params
         }
         const file_prefix_name = createLoggerPrefix(req.originalUrl);
         // 将posts帖子相关的请求 写入logger.txt文件中
-        fs.appendFile(`src/logger/${file_prefix_name}_logger.txt`, 'Request...' + JSON.stringify(requestLog) + '\r\n', (err) => {
+        fs.appendFile(`src/logger/${file_prefix_name}_logger.txt`, JSON.stringify(requestLog) + '\r\n', (err) => {
             if (err) throw err;
         })
-        console.log('Request...', requestLog);
         next();
     }
 }

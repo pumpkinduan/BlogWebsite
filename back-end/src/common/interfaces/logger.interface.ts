@@ -3,5 +3,5 @@ export interface ReqLoggerInterface {
     ip: string;
     requestTime: string;
     originalUrl: string;
-    [prop: string]: string;
+    [prop: string]: any;
 }

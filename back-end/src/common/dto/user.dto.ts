@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { ROLE } from 'common/interfaces/index.interface'
+import { TYPE } from 'common/interfaces/index.interface'
 import { IsDefined, IsEnum, IsString } from 'class-validator'
 // 管理员DTO
 export namespace UserDto {
@@ -16,9 +16,9 @@ export namespace UserDto {
         readonly nickname: string;
 
         @IsDefined()
-        @IsEnum(ROLE)
-        @ApiProperty({ description: '用户级别', enum: ROLE })
-        readonly role: ROLE
+        @IsEnum(TYPE)
+        @ApiProperty({ description: '用户级别', enum: TYPE })
+        readonly type: TYPE
 
         @IsDefined()
         @IsString()

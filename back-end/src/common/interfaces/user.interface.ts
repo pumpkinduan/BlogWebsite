@@ -2,7 +2,7 @@
 type userId = string;
 type postId = string;
 
-export enum ROLE {
+export enum TYPE {
     BasicUser,
     SuperUser
 }
@@ -10,7 +10,7 @@ export namespace UserInterface {
     export interface BasicUser
         extends Record<'nickname' | 'email', string> {
         id: string;
-        role: ROLE.BasicUser;
+        type: TYPE.BasicUser;
     }
     export interface SuperUserProfile extends Pick<BasicUser, 'nickname' | 'email'> {
         github: string;
@@ -18,12 +18,12 @@ export namespace UserInterface {
         notice?: string;
     }
     export interface SuperUser {
-        role: ROLE.SuperUser;
+        type: TYPE.SuperUser;
         profiles?: SuperUserProfile;
         moment_ids?: postId[]; // 文章id
         word_ids?: userId[]; // 给我的留言id
     }
-    export interface CreateUser extends Pick<BasicUser, 'nickname' | 'email' | 'role'> {
+    export interface CreateUser extends Pick<BasicUser, 'nickname' | 'email' | 'type'> {
         password: string;
     }
 }

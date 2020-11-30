@@ -11,8 +11,8 @@ export class CommentService {
     ) { }
     async create(createComment: CommentDto.CreateCommentDto): Promise<Comment> {
         const children = createComment.replyId ? [createComment.replyId] : [];
-        const post = await this.PostRepository.findOne(createComment.postId);
-        return await this.commentRepository.save(Object.assign(createComment, { children, post }));
+        // 建立了外键关系时，save时必须传入实体
+        return await this.commentRepository.save(Object.assign(createComment, { children, post: { id: createComment.postId }, user: { id: createComment.userId } }));
     }
 
     async deleteOneById(id: string): Promise<void> {

@@ -23,11 +23,8 @@ export class Post {
     @Column('simple-array')
     tags: string[]; // 'js, ts, css'
 
-    @OneToMany(type => Comment, comment => comment.post)
+    @OneToMany(() => Comment, comment => comment.post)
     comments: Comment[];
-
-    @ManyToMany(type => User, user => user.posts)
-    users: User[];
 
     @Column()
     coverUrl: string;
