@@ -4,7 +4,7 @@ export namespace CommentInterface {
         id: string;
         content: string;
         createdAt: string;
-        user: UserInterface.BasicUser; // 留言关联的用户，与用户为一对多关系
+        user: UserInterface.NORMAL; // 留言关联的用户，与用户为一对多关系
         children: BasicComment[] // 回复
         post: PostInterface.BasicPost
     }

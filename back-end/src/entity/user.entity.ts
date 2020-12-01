@@ -1,29 +1,35 @@
-import { Entity, Column, PrimaryColumn, OneToMany, ManyToMany } from 'typeorm';
-import { UserInterface, TYPE } from 'common/interfaces/index.interface'
-import { Comment, Post } from './index'
+import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
+import { UserInterface, USER_TYPE } from 'common/interfaces/index.interface';
+import { Comment } from './index';
+import { IsDefined, IsEnum } from 'class-validator';
 @Entity()
 export class User {
-    @PrimaryColumn({ generated: 'uuid' })
-    id: string;
+  @PrimaryColumn({ generated: 'uuid' })
+  id: string;
 
-    @Column()
-    nickname: string;
+  @Column()
+  username: string;
 
-    @Column()
-    email: string;
+  @Column()
+  email: string;
 
-    @Column()
-    type: TYPE;
+  @Column()
+  @IsEnum(USER_TYPE)
+  type: USER_TYPE;
 
-    @Column()
-    webUrl: string;
+  @Column()
+  webUrl: string;
 
-    @OneToMany(() => Comment, comment => comment.user)
-    comments: Comment[]; // 用户关联的留言，与留言为一对多关系
+  @OneToMany(
+    () => Comment,
+    comment => comment.user,
+  )
+  comments: Comment[]; // 用户关联的留言，与留言为一对多关系
 
-    @Column('json', { nullable: true })
-    profiles?: UserInterface.SuperUserProfile;
+  @Column('json', { nullable: true })
+  profiles?: UserInterface.SuperUserProfile;
 
-    @Column({ nullable: true })
-    password?: string
+  @Column()
+  @IsDefined()
+  password: string;
 }

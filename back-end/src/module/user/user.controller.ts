@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Query, Get, HttpStatus, Param, Post, Inject, ValidationPipe, ParseIntPipe } from '@nestjs/common';
 import { UserDto } from "common/dto/index.dto";
-import { ResultInterface, SuccessMessage, TYPE } from 'common/interfaces/index.interface'
+import { ResultInterface, SuccessMessage, USER_TYPE } from 'common/interfaces/index.interface'
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UserService } from 'module/user/user.service'
 @Controller('users')
@@ -14,16 +14,16 @@ export class UserController {
     async getBasicUsers(
         @Query('page') page = 1,
         @Query('pageSize') pageSize = 10,
-        @Query('type', new ParseIntPipe()) type: TYPE
+        @Query('type', new ParseIntPipe()) type: USER_TYPE
     ): Promise<ResultInterface> {
         const data = await this.userRepository.findAndCount(page, pageSize, type);
         data[0].forEach((user) => {
-            if (type === TYPE.BasicUser) {
+            if (type === USER_TYPE.NORMAL) {
                 // 普通用户没有 该字段
                 Reflect.deleteProperty(user, 'password');
                 Reflect.deleteProperty(user, 'profiles');
             }
-            if (type === TYPE.SuperUser) {
+            if (type === USER_TYPE.ADMIN) {
                 Reflect.deleteProperty(user, 'webUrl');
             }
         })
@@ -38,12 +38,12 @@ export class UserController {
     @Post('/create')
     async createUser(@Body(new ValidationPipe({ transform: true })) createUserDto: UserDto.CreateUserDto): Promise<ResultInterface> {
         const data = await this.userRepository.create(createUserDto);
-        if (createUserDto.type === TYPE.BasicUser) {
+        if (createUserDto.type === USER_TYPE.NORMAL) {
             // 创建普通用户
             Reflect.deleteProperty(data, 'password');
             Reflect.deleteProperty(data, 'profiles');
         }
-        if (createUserDto.type === TYPE.SuperUser) {
+        if (createUserDto.type === USER_TYPE.ADMIN) {
             // 创建超级用户
             Reflect.deleteProperty(data, 'webUrl');
         }

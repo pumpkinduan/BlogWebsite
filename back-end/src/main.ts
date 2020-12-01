@@ -6,6 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalFilters(new HttpExceptionFilter());
   const options = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('博客API')
     .setDescription('第一次使用Nest')
     .setVersion('1.0')

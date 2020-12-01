@@ -7,6 +7,8 @@ import { UserModule } from 'module/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Comment, User, Post } from 'entity/index'
 import { LoggerMiddleware } from 'middleware';
+import { PassportModule } from '@nestjs/passport'
+import { AuthModule } from './module/auth/auth.module';
 @Module({
   imports: [TypeOrmModule.forRootAsync(({
     useFactory: () => ({
@@ -19,7 +21,7 @@ import { LoggerMiddleware } from 'middleware';
       entities: [Comment, Post, User],
       synchronize: true
     })
-  })), PostModule, CommentModule, UserModule],
+  })), PostModule, CommentModule, UserModule, AuthModule, PassportModule],
   controllers: [AppController],
   providers: [AppService],
 })

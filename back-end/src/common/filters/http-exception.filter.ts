@@ -15,6 +15,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
             time: dayjs(Date.now()).format('YYYY-MM-DD hh:mm:ss'),
             path: request.url,
         }
+
         const json = typeof exceptionResult === 'object' ? Object.assign(baseJson, exceptionResult) : baseJson
         response
             .status(status)
