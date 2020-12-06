@@ -7,13 +7,14 @@ import { AuthService } from './auth.service';
 import { LocalStrategy } from './local.strategy'
 import { JwtStrategy } from './jwt.strategy'
 import { jwtConstants } from './constants'
+import { CryptoUtil } from 'utils/crypto';
 
 @Module({
   imports: [UserModule, PassportModule, JwtModule.register({
     secret: jwtConstants.secret,
     signOptions: { expiresIn: jwtConstants.expiresIn }
   })],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, CryptoUtil],
   exports: [AuthService]
 })
 export class AuthModule { }
