@@ -11,16 +11,21 @@ import {
 	HttpStatus,
 	ParseUUIDPipe,
 	ValidationPipe,
+	UseGuards,
 } from '@nestjs/common';
 import { PostDto } from 'common/dto/index.dto';
 import {
 	ResultInterface,
 	SuccessMessage,
 } from 'common/interfaces/index.interface';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PostService } from './post.service';
 import { formatDate } from 'utils';
 import { Post as PostEntity } from 'entity/post.entity';
+import { AuthGuard } from '@nestjs/passport';
+
+@UseGuards(AuthGuard('jwt'))
+@ApiBearerAuth()
 @Controller('posts')
 @ApiTags('文章')
 export class PostController {

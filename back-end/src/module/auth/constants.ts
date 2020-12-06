@@ -1,4 +1,4 @@
 export const jwtConstants = {
     secret: 'secretKey',
-    expiresIn: '60s' // 一分钟过期
+    expiresIn: '6000s' // 一分钟过期
 }

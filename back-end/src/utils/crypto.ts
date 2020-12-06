@@ -8,8 +8,6 @@ export class CryptoUtil {
    * @param password 登录密码
    */
   encryptPassword(password: string): string {
-    console.log(createHash('sha256').update(password));
-
     return createHash('sha256')
       .update(password)
       .digest('hex');

@@ -1,4 +1,6 @@
 export * from './formateDate'
+export * from './validator'
+export * from './crypto'
 
 // 根据访问的url来创建logger文件的前缀名，posts_logger，users_logger...
 export const createLoggerPrefix = (originalUrl: string) => {

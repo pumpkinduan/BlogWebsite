@@ -1,52 +1,58 @@
 import {
-  Controller,
-  Get,
-  Post,
-  UseGuards,
-  Request,
-  Body,
+    Controller,
+    Get,
+    Post,
+
+    Body,
+    HttpStatus,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiProperty, ApiTags } from '@nestjs/swagger';
-import { AuthGuard } from '@nestjs/passport';
 import { UserDto } from 'common/dto/index.dto';
 import { AuthService } from 'module/auth/auth.service';
-import { ResultInterface } from 'common/interfaces/result.interface';
+import { ResultInterface, SuccessMessage } from 'common/interfaces/result.interface';
 @Controller()
 @ApiTags('默认')
 export class AppController {
-  constructor(
-    private readonly appService: AppService,
-    private readonly authService: AuthService,
-  ) {}
+    constructor(
+        private readonly appService: AppService,
+        private readonly authService: AuthService,
+    ) { }
 
-  @Get('/')
-  getHello(): string {
-    return this.appService.getHello();
-  }
+    @Get('/')
+    getHello(): string {
+        return this.appService.getHello();
+    }
 
-  @ApiProperty({ description: '注册' })
-  @Post('register')
-  async register(
-    @Body() loginDto: UserDto.CreateUserDto,
-  ): Promise<ResultInterface> {
-    return await this.authService.register(loginDto);
-  }
+    @ApiProperty({ description: '注册' })
+    @Post('register')
+    async register(
+        @Body() loginDto: UserDto.CreateUserDto,
+    ): Promise<ResultInterface> {
+        await this.authService.register(loginDto);
+        return {
+            success: true,
+            statusCode: HttpStatus.OK,
+            message: SuccessMessage.User.CREATE,
+        };
+    }
 
-  // @ApiProperty({ description: '登录' })
-  // @Post('login')
-  // async login(
-  // 	@Body() loginDto: UserDto.CreateUserDto,
-  // ): Promise<ResultInterface> {
-  // 	return await this.authService.basicUserLogin(loginDto);
-  // }
-
-  // @ApiProperty({ description: '管理员登录' })
-  // @UseGuards(AuthGuard('jwt')) // 采用本地策略
-  // @Post('admin/login')
-  // async adminLogin(
-  // 	@Body() loginDto: UserDto.AdminLoginDto,
-  // ): Promise<any> {
-  // 	return await this.authService.adminLogin(loginDto);
-  // }
+    @ApiProperty({ description: '登录' })
+    // @UseGuards(AuthGuard('jwt'))
+    @Post('login')
+    async login(
+        @Body() loginDto: UserDto.LoginDto,
+    ): Promise<ResultInterface> {
+        await this.authService.login(loginDto);
+        const payload = { account: loginDto.account, password: loginDto.password };
+        const accessToken = await this.authService.createToken(payload);
+        return {
+            success: true,
+            message: SuccessMessage.User.LOGIN,
+            statusCode: HttpStatus.OK,
+            data: {
+                accessToken
+            }
+        }
+    }
 }

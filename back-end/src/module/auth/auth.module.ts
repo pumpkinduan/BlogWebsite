@@ -4,7 +4,6 @@ import { JwtModule } from '@nestjs/jwt'
 import { UserModule } from 'module/user/user.module'
 
 import { AuthService } from './auth.service';
-import { LocalStrategy } from './local.strategy'
 import { JwtStrategy } from './jwt.strategy'
 import { jwtConstants } from './constants'
 import { CryptoUtil } from 'utils/crypto';
@@ -14,7 +13,7 @@ import { CryptoUtil } from 'utils/crypto';
     secret: jwtConstants.secret,
     signOptions: { expiresIn: jwtConstants.expiresIn }
   })],
-  providers: [AuthService, LocalStrategy, JwtStrategy, CryptoUtil],
+  providers: [AuthService, JwtStrategy, CryptoUtil],
   exports: [AuthService]
 })
 export class AuthModule { }

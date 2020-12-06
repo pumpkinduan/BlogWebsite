@@ -2,6 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { USER_TYPE } from 'common/interfaces/index.interface';
 import { IsDefined, IsEnum, IsString } from 'class-validator';
 // 管理员DTO
+type email = string
+type username = string
 export namespace UserDto {
   // 创建普通用户或管理员
   export class CreateUserDto {
@@ -25,6 +27,15 @@ export namespace UserDto {
 
     @IsString()
     readonly webUrl: string;
+
+    @ApiProperty({ description: '登录密码' })
+    password: string;
+  }
+  export class LoginDto {
+    @IsDefined()
+    @IsString()
+    @ApiProperty({ description: '邮箱或用户名' })
+    readonly account: email | username;
 
     @ApiProperty({ description: '登录密码' })
     password: string;
