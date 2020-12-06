@@ -3,8 +3,8 @@ type userId = string;
 type postId = string;
 
 export enum USER_TYPE {
-  NORMAL = 'normal',
-  ADMIN = 'admin',
+  NORMAL,
+  ADMIN,
 }
 export namespace UserInterface {
   export interface NORMAL extends Record<'username' | 'email', string> {

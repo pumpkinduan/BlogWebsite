@@ -17,8 +17,8 @@ export class User {
   @IsEnum(USER_TYPE)
   type: USER_TYPE;
 
-  @Column()
-  webUrl: string;
+  @Column({ nullable: true })
+  webUrl?: string;
 
   @OneToMany(
     () => Comment,
