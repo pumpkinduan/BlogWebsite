@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm'
 import { UserDto } from 'common/dto/index.dto'
@@ -41,6 +41,16 @@ export class UserService {
     async findOneById(id: string): Promise<User | undefined> {
         return await this.userRepository.findOne(id)
 
+    }
+
+    /**
+     * @param id 管理员id
+     * @param updateProfileDto 管理员的基础信息
+     */
+    async updateAdminProfiles(id: string, updateProfileDto: UserDto.UpdateAdminProfilesDto): Promise<void> {
+        const existing_admin = await this.userRepository.findOne(id);
+        if (!existing_admin) throw new NotFoundException(`保存管理员信息失败，ID 为${id}的管理员不存在`);
+        await this.userRepository.update(id, { 'profiles': updateProfileDto })
     }
 
     /**

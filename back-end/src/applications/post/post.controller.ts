@@ -107,15 +107,9 @@ export class PostController {
 		@Body(new ValidationPipe()) updatePostDto: PostDto.UpdatePostDto,
 		@Param('id', new ParseUUIDPipe()) id: string,
 	): Promise<ResultInterface> {
-		let post = await this.postService.update(id, updatePostDto);
-		post = formatDate<PostEntity>(post, [
-			'createdAt',
-			'deletedAt',
-			'updatedAt',
-		]) as PostEntity;
+		await this.postService.update(id, updatePostDto);
 		return {
 			success: true,
-			data: post,
 			statusCode: HttpStatus.OK,
 			message: SuccessMessage.Post.UPDATE,
 		};
