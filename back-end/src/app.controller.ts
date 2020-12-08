@@ -2,14 +2,13 @@ import {
     Controller,
     Get,
     Post,
-
     Body,
     HttpStatus,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiProperty, ApiTags } from '@nestjs/swagger';
 import { UserDto } from 'common/dto/index.dto';
-import { AuthService } from 'module/auth/auth.service';
+import { AuthService } from 'applications/auth/auth.service';
 import { ResultInterface, SuccessMessage } from 'common/interfaces/result.interface';
 @Controller()
 @ApiTags('默认')

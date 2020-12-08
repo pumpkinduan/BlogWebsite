@@ -1,14 +1,14 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PostModule } from 'module/post/post.module';
-import { CommentModule } from 'module/comment/comment.module';
-import { UserModule } from 'module/user/user.module';
+import { PostModule } from 'applications/post/post.module';
+import { CommentModule } from 'applications/comment/comment.module';
+import { UserModule } from 'applications/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Comment, User, Post } from 'entity/index'
-import { LoggerMiddleware } from 'middleware';
+import { Comment, User, Post } from 'entities'
+import { LoggerMiddleware } from 'middlewares/logger.middleware';
 import { PassportModule } from '@nestjs/passport'
-import { AuthModule } from './module/auth/auth.module';
+import { AuthModule } from './applications/auth/auth.module';
 @Module({
   imports: [TypeOrmModule.forRootAsync(({
     useFactory: () => ({

@@ -20,8 +20,8 @@ import {
 } from 'common/interfaces/index.interface';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PostService } from './post.service';
-import { formatDate } from 'utils';
-import { Post as PostEntity } from 'entity/post.entity';
+import { formatDate } from 'utils/index.util';
+import { Post as PostEntity } from 'entities';
 import { AuthGuard } from '@nestjs/passport';
 
 @UseGuards(AuthGuard('jwt'))
@@ -117,7 +117,7 @@ export class PostController {
 			success: true,
 			data: post,
 			statusCode: HttpStatus.OK,
-			message: SuccessMessage.Post.UPDATE
+			message: SuccessMessage.Post.UPDATE,
 		};
 	}
 }

@@ -4,11 +4,11 @@ import {
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
-import { UserService } from 'module/user/user.service';
-import { User } from 'entity';
+import { UserService } from 'applications/user/user.service';
+import { User } from 'entities';
 import { UserDto } from 'common/dto/index.dto';
 import { JwtService } from '@nestjs/jwt';
-import { CryptoUtil, validateEmail, validateUserName } from 'utils';
+import { CryptoUtil, validateEmail, validateUserName } from 'utils/index.util';
 
 interface PayloadInterface {
     account: string;

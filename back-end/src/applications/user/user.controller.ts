@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Query, Get, HttpStatus, Param, Post, Inject, 
 import { UserDto } from "common/dto/index.dto";
 import { ResultInterface, SuccessMessage, USER_TYPE } from 'common/interfaces/index.interface'
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { UserService } from 'module/user/user.service'
+import { UserService } from './user.service'
 @Controller('users')
 @ApiTags('用户群')
 export class UserController {

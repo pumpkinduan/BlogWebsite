@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Post } from 'entity/index';
+import { Post } from 'entities';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostInterface, USER_TYPE } from 'common/interfaces/index.interface';
@@ -7,7 +7,7 @@ import { PostInterface, USER_TYPE } from 'common/interfaces/index.interface';
 export class PostService {
   constructor(
     @InjectRepository(Post) readonly postRepository: Repository<Post>,
-  ) {}
+  ) { }
   async findAndCount(
     page: number,
     pageSize: number,
