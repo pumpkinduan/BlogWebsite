@@ -27,7 +27,7 @@ export class User {
   comments: Comment[]; // 用户关联的留言，与留言为一对多关系
 
   @Column('json', { nullable: true })
-  profiles?: UserInterface.SuperUserProfile;
+  profiles?: UserInterface.AdminProfile;
 
   @Column()
   @IsDefined()

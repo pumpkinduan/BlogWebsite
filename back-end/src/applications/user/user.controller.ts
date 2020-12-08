@@ -11,7 +11,7 @@ export class UserController {
     ) { }
     @ApiOperation({ description: '获取用户, 根据role来获取对应的用户类型' })
     @Get()
-    async getBasicUsers(
+    async getUsers(
         @Query('page') page = 1,
         @Query('pageSize') pageSize = 10,
         @Query('type', new ParseIntPipe()) type: USER_TYPE

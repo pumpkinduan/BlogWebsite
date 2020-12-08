@@ -40,4 +40,8 @@ export namespace UserDto {
     @ApiProperty({ description: '登录密码' })
     password: string;
   }
+
+  export class UpdateAdminProfileDto {
+
+  }
 }

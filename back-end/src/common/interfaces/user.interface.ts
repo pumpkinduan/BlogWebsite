@@ -11,14 +11,14 @@ export namespace UserInterface {
     id: string;
     type: USER_TYPE.NORMAL;
   }
-  export interface SuperUserProfile extends Pick<NORMAL, 'username' | 'email'> {
+  export interface AdminProfile extends Pick<NORMAL, 'username' | 'email'> {
     github: string;
     brief: string;
     notice?: string;
   }
   export interface ADMIN {
     type: USER_TYPE.ADMIN;
-    profiles?: SuperUserProfile;
+    profiles?: AdminProfile;
     moment_ids?: postId[]; // 文章id
     word_ids?: userId[]; // 给我的留言id
   }
