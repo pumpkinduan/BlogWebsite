@@ -23,14 +23,13 @@ import { PostService } from './post.service';
 import { formatDate } from 'utils/index.util';
 import { Post as PostEntity } from 'entities';
 import { AuthGuard } from '@nestjs/passport';
-
-@UseGuards(AuthGuard('jwt'))
-@ApiBearerAuth()
 @Controller('posts')
 @ApiTags('文章')
 export class PostController {
 	constructor(@Inject(PostService) private readonly postService: PostService) { }
 	@ApiOperation({ description: '创建文章' })
+	@UseGuards(AuthGuard('jwt'))
+	@ApiBearerAuth()
 	@Post('/create')
 	async createPost(
 		@Body(new ValidationPipe({ transform: true }))
@@ -91,6 +90,8 @@ export class PostController {
 	}
 
 	@ApiOperation({ description: '删除文章' })
+	@UseGuards(AuthGuard('jwt'))
+	@ApiBearerAuth()
 	@Delete(':id')
 	async deletePost(@Param('id') id: string): Promise<ResultInterface> {
 		await this.postService.deleteOneById(id);
@@ -102,6 +103,8 @@ export class PostController {
 	}
 
 	@ApiOperation({ description: '更新文章' })
+	@UseGuards(AuthGuard('jwt'))
+	@ApiBearerAuth()
 	@Put(':id')
 	async updatePost(
 		@Body(new ValidationPipe()) updatePostDto: PostDto.UpdatePostDto,

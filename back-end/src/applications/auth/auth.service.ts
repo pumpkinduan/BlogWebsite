@@ -28,7 +28,7 @@ export class AuthService {
         if (validateUserName(account).status) {
             user = await this.userService.findOneByUserName(account);
         } else if (validateEmail(account).status) {
-            user = await this.userService.findOneByUserName(account);
+            user = await this.userService.findOneByEmail(account);
         }
         return user;
     }
@@ -42,11 +42,14 @@ export class AuthService {
     }
 
     async register(registerDto: UserDto.CreateUserDto) {
-
-        if (!validateEmail(registerDto.email).status || !validateUserName(registerDto.username).status) {
-            throw new BadRequestException('用户名或邮箱格式不正确')
+        const res_email = validateEmail(registerDto.email);
+        const res_username = validateUserName(registerDto.username)
+        if (!res_email.status) {
+            throw new BadRequestException(res_email.msg)
         }
-
+        if (!res_username.status) {
+            throw new BadRequestException(res_username.msg)
+        }
         const existing_user = await this.userService.findOneByUserName(
             registerDto.username,
         );

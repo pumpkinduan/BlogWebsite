@@ -1,8 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Inject, HttpStatus, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Post, Inject, HttpStatus, Query, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { CommentDto } from "common/dto/index.dto";
 import { ResultInterface, SuccessMessage } from "common/interfaces/index.interface";
 import { CommentService } from './comment.service'
+import { AuthGuard } from '@nestjs/passport';
 @Controller('comments')
 @ApiTags('留言')
 export class CommentController {
@@ -31,6 +32,8 @@ export class CommentController {
     }
 
     @ApiOperation({ description: '删除留言' })
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
     @Delete(':id')
     async deleteComment(@Param('id') id: string): Promise<ResultInterface> {
         await this.commentRepository.deleteOneById(id);
