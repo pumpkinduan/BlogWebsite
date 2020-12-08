@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Query, Get, HttpStatus, Param, Post, Inject, ValidationPipe, ParseIntPipe, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Query, Get, HttpStatus, Param, Post, Inject, ValidationPipe, Put } from '@nestjs/common';
 import { UserDto } from "common/dto/index.dto";
 import { ResultInterface, SuccessMessage, USER_TYPE } from 'common/interfaces/index.interface'
 import { ApiOperation, ApiTags, ApiQuery } from '@nestjs/swagger';
@@ -15,19 +15,9 @@ export class UserController {
     async getUsers(
         @Query('page') page = 1,
         @Query('pageSize') pageSize = 10,
-        @Query('type', new ParseIntPipe()) type: USER_TYPE
+        @Query('type') type: USER_TYPE
     ): Promise<ResultInterface> {
         const data = await this.userRepository.findAndCount(page, pageSize, type);
-        data[0].forEach((user) => {
-            if (type === USER_TYPE.NORMAL) {
-                // 普通用户没有 该字段
-                Reflect.deleteProperty(user, 'password');
-                Reflect.deleteProperty(user, 'profiles');
-            }
-            if (type === USER_TYPE.ADMIN) {
-                Reflect.deleteProperty(user, 'webUrl');
-            }
-        })
         return {
             statusCode: HttpStatus.OK,
             success: true,
@@ -38,20 +28,10 @@ export class UserController {
     @ApiOperation({ description: '创建用户, 管理员或普通用户' })
     @Post('/create')
     async createUser(@Body(new ValidationPipe({ transform: true })) createUserDto: UserDto.CreateUserDto): Promise<ResultInterface> {
-        const data = await this.userRepository.create(createUserDto);
-        if (createUserDto.type === USER_TYPE.NORMAL) {
-            // 创建普通用户
-            Reflect.deleteProperty(data, 'password');
-            Reflect.deleteProperty(data, 'profiles');
-        }
-        if (createUserDto.type === USER_TYPE.ADMIN) {
-            // 创建超级用户
-            Reflect.deleteProperty(data, 'webUrl');
-        }
+        await this.userRepository.create(createUserDto);
         return {
             statusCode: HttpStatus.OK,
             message: SuccessMessage.User.CREATE,
-            data: data,
             success: true
         }
     }

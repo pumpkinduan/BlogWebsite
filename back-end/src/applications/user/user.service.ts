@@ -14,8 +14,8 @@ export class UserService {
      * 创建用户
      * @param createUser 用户信息
      */
-    async create(createUser: UserDto.CreateUserDto): Promise<User> {
-        return await this.userRepository.save(createUser);
+    async create(createUser: UserDto.CreateUserDto): Promise<void> {
+        await this.userRepository.save(createUser);
     }
 
     /**
@@ -49,7 +49,7 @@ export class UserService {
      */
     async updateAdminProfiles(id: string, updateProfileDto: UserDto.UpdateAdminProfilesDto): Promise<void> {
         const existing_admin = await this.userRepository.findOne(id);
-        if (!existing_admin) throw new NotFoundException(`保存管理员信息失败，ID 为${id}的管理员不存在`);
+        if (!existing_admin) throw new NotFoundException(`保存信息失败，ID 为${id}的管理员不存在`);
         await this.userRepository.update(id, { 'profiles': updateProfileDto })
     }
 
@@ -72,10 +72,12 @@ export class UserService {
         type: USER_TYPE
     ): Promise<[User[], number]> {
         const offset = page * pageSize - pageSize;
+        const select: (keyof User)[] = type === USER_TYPE.NORMAL ? ['email', 'id', 'username', 'webUrl'] : ['email', 'id', 'username', 'profiles']
         return await this.userRepository.findAndCount({
             skip: offset,
             take: pageSize,
-            where: { type: type }
+            where: { type: type },
+            select: select
         });
     }
 }

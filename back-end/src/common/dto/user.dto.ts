@@ -43,20 +43,20 @@ export namespace UserDto {
     export class UpdateAdminProfilesDto implements UserInterface.AdminProfiles {
         @IsDefined()
         @IsString()
-        @ApiProperty({ description: 'github地址', default: 'https://github.com/pumpkinduan' })
+        @ApiProperty({ description: 'github地址', default: 'https://github.com/pumpkinduan', enum: ['https://github.com/pumpkinduan'] })
         github: string;
 
         @IsDefined()
         @IsString()
-        @ApiProperty({ description: '个人简介', default: '' })
+        @ApiProperty({ description: '个人简介', enum: [''] })
         brief: string;
 
         @IsDefined()
         @IsString()
-        @ApiProperty({ description: '昵称', default: '伊内个南瓜瓜' })
+        @ApiProperty({ description: '昵称', default: '伊内个南瓜瓜', enum: ['伊内个南瓜瓜'] })
         nickname: string;
 
-        @ApiProperty({ description: '公告', default: '个人博客网站2.0即将发布，期待ing......', nullable: true })
+        @ApiProperty({ description: '公告', default: '个人博客网站2.0即将发布，期待ing......', nullable: true, enum: ['个人博客网站2.0即将发布，期待ing......'] })
         notice?: string;
     }
 }
