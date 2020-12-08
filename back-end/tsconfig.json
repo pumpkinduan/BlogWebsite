@@ -7,15 +7,21 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "target": "ES6",
-    "sourceMap": true,
+    "sourceMap": false,
+    "inlineSourceMap": false,
     "outDir": "./dist",
-    "baseUrl": "src",
+    "baseUrl": "./src",
     "incremental": true,
+
     "paths": {
-      "@src": ["./*"],
-      "@module": ["./module"],
-      "@common": ["./common"],
-      "@middleware": ["./middleware"]
-    },
-  }
+      "applications": ["./applications"],
+      "common": ["./common"],
+      "middlewares": ["./middlewares"],
+      "utils": ["./utils"],
+      "guards": ["./guards"],
+      "entities": ["./entities"]
+    }
+  },
+  "include": ["src/**/*", ".eslintrc.js", "dist"],
+  "exclude": ["node_modules", "**/*.spec.ts", "/src/logger"]
 }
