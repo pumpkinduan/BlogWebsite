@@ -18,7 +18,7 @@ import {
 	ResultInterface,
 	SuccessMessage,
 } from 'common/interfaces/index.interface';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { PostService } from './post.service';
 import { formatDate } from 'utils/index.util';
 import { Post as PostEntity } from 'entities';
@@ -52,6 +52,8 @@ export class PostController {
 
 	@ApiOperation({ description: '获取文章列表' })
 	@Get()
+	@ApiQuery({ name: 'page', })
+	@ApiQuery({ name: 'pageSize' })
 	async getPosts(
 		@Query('page') page = 1,
 		@Query('pageSize') pageSize = 10,

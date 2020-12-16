@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Inject, HttpStatus, Query, UseGuards } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { CommentDto } from "common/dto/index.dto";
 import { ResultInterface, SuccessMessage } from "common/interfaces/index.interface";
 import { CommentService } from './comment.service'
@@ -11,6 +11,8 @@ export class CommentController {
         @Inject(CommentService) readonly commentRepository: CommentService,
     ) { }
     @ApiOperation({ description: '获取留言列表' })
+    @ApiQuery({ name: 'page', })
+    @ApiQuery({ name: 'pageSize' })
     @Get()
     async getComments(@Query('page') page = 1, @Query('pageSize') pageSize = 10): Promise<ResultInterface> {
         const comments = await this.commentRepository.findAndCount(page, pageSize)

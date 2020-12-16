@@ -11,6 +11,8 @@ export class UserController {
         @Inject(UserService) readonly userRepository: UserService,
     ) { }
     @ApiOperation({ description: '获取用户, 根据role来获取对应的用户类型' })
+    @ApiQuery({ name: 'page', })
+    @ApiQuery({ name: 'pageSize' })
     @ApiQuery({ name: 'type', enum: USER_TYPE })
     @Get()
     async getUsers(
