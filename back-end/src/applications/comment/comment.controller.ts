@@ -26,10 +26,13 @@ export class CommentController {
 
     @ApiOperation({ description: '创建留言' })
     @Post('/create')
-    async createComment(@Body() createCommentDto: CommentDto.CreateCommentDto) {
+    async createComment(@Body() createCommentDto: CommentDto.CreateCommentDto): Promise<ResultInterface> {
         const comment = await this.commentRepository.create(createCommentDto)
         return {
-            data: comment
+            success: true,
+            data: comment,
+            statusCode: HttpStatus.OK,
+            message: SuccessMessage.Comment.CREATE,
         };
     }
 

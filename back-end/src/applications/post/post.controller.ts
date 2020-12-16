@@ -34,7 +34,7 @@ export class PostController {
 	async createPost(
 		@Body(new ValidationPipe({ transform: true }))
 		createPostDto: PostDto.CreatePostDto,
-	): Promise<ResultInterface> {
+	): Promise<ResultInterface<PostEntity>> {
 		let post = await this.postService.create(createPostDto);
 		// NOTE: 将UTC格式的时间进行转换
 		post = formatDate<PostEntity>(post, [
@@ -44,7 +44,7 @@ export class PostController {
 		]) as PostEntity;
 		return {
 			success: true,
-			data: [post],
+			data: post,
 			statusCode: HttpStatus.OK,
 			message: SuccessMessage.Post.CREATE,
 		};
