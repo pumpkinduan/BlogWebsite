@@ -4,6 +4,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from 'common/filters'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
+  app.setGlobalPrefix('v1');
   app.useGlobalFilters(new HttpExceptionFilter());
   const options = new DocumentBuilder()
     .addBearerAuth()
