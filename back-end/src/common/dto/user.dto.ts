@@ -3,8 +3,6 @@ import { UserInterface, USER_TYPE } from 'common/interfaces/index.interface';
 import { IsDefined, IsEmail, IsEnum } from 'class-validator';
 
 // 管理员DTO
-type email = string
-type username = string
 export namespace UserDto {
     // 创建普通用户或管理员
     export class CreateUserDto {

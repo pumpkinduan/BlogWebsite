@@ -22,7 +22,7 @@ export class UserService {
      * 通过用户名 查询用户
      * @param username 用户名
      */
-    async findOneByUserName(username: string): Promise<User | undefined> {
+    async findOneByUserName(username: string): Promise<User> {
         return await this.userRepository.findOne({ where: { username } })
     }
 
@@ -30,17 +30,16 @@ export class UserService {
      * 通过邮箱 查询用户
      * @param email 用户名
      */
-    async findOneByEmail(email: string): Promise<User | undefined> {
-        return await this.userRepository.findOne({ where: { email } })
+    async findOneByEmail(email: string): Promise<User> {
+        return await this.userRepository.findOne({ where: { email }, select: ['id', 'password', 'email'] })
     }
 
     /**
      * 通过id 查询用户
      * @param id 用户id
      */
-    async findOneById(id: string): Promise<User | undefined> {
-        return await this.userRepository.findOne(id)
-
+    async findOneById(id: string): Promise<User> {
+        return await this.userRepository.findOne(id, { select: ['email', 'id', 'profiles', 'type', 'username', 'webUrl'] });
     }
 
     /**

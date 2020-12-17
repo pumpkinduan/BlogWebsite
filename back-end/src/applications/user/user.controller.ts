@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Query, Get, HttpStatus, Param, Post, Inject, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Query, Get, HttpStatus, Param, Post, Inject, Put, UseGuards, Request } from '@nestjs/common';
 import { UserDto } from "common/dto/index.dto";
 import { ResultInterface, SuccessMessage, USER_TYPE } from 'common/interfaces/index.interface'
 import { ApiOperation, ApiTags, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
@@ -10,6 +10,7 @@ export class UserController {
     constructor(
         @Inject(UserService) readonly userRepository: UserService,
     ) { }
+
     @ApiOperation({ description: '获取用户, 根据role来获取对应的用户类型' })
     @ApiQuery({ name: 'page', })
     @ApiQuery({ name: 'pageSize' })
@@ -25,6 +26,22 @@ export class UserController {
             statusCode: HttpStatus.OK,
             success: true,
             data: data
+        }
+    }
+
+    @ApiOperation({ description: '获取指定用户信息' })
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    @Get('/profile')
+    async getUserProfile(
+        @Request() req
+    ): Promise<ResultInterface> {
+        console.log(req.user);
+        const data = await this.userRepository.findOneById(req.user.id);
+        return {
+            statusCode: HttpStatus.OK,
+            success: true,
+            data
         }
     }
 

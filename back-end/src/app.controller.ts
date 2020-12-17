@@ -4,6 +4,7 @@ import {
     Post,
     Body,
     HttpStatus,
+    Request
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiProperty, ApiTags } from '@nestjs/swagger';
@@ -41,16 +42,12 @@ export class AppController {
     async login(
         @Body() loginDto: UserDto.LoginDto,
     ): Promise<ResultInterface> {
-        await this.authService.login(loginDto);
-        const payload = { email: loginDto.email, password: loginDto.password };
-        const accessToken = await this.authService.createToken(payload);
+        const data = await this.authService.login(loginDto);
         return {
             success: true,
             message: SuccessMessage.User.LOGIN,
             statusCode: HttpStatus.OK,
-            data: {
-                accessToken
-            }
+            data
         }
     }
 }

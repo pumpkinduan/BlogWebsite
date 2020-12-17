@@ -12,7 +12,7 @@ import { CryptoUtil, validateEmail, validateUserName } from 'utils/index.util';
 
 interface PayloadInterface {
     email: string;
-    password: string;
+    id: string;
 }
 
 @Injectable()
@@ -22,21 +22,13 @@ export class AuthService {
         private readonly jwtService: JwtService,
         private readonly cryptoUtil: CryptoUtil,
     ) { }
-
-    async getUser(email: string) {
-        let user: User = null;
-        if (validateEmail(email).status) {
-            user = await this.userService.findOneByEmail(email);
-        }
-        return user;
-    }
-
     async createToken(payload: PayloadInterface) {
         return await this.jwtService.sign(payload);
     }
 
-    async validateUser(payload: PayloadInterface): Promise<User | null> {
-        return await this.getUser(payload.email);;
+    async validateUser(payload: PayloadInterface): Promise<User> {
+        return await this.userService.findOneByEmail(payload.email);
+
     }
 
     async register(registerDto: UserDto.CreateUserDto) {
@@ -69,13 +61,16 @@ export class AuthService {
     }
 
     async login(loginDto: UserDto.LoginDto) {
-        const user = await this.getUser(loginDto.email);
-
+        const user = await this.userService.findOneByEmail(loginDto.email);
+        const accessToken = await this.createToken({ email: user.email, id: user.id });
         if (!user) throw new NotFoundException('该用户名或邮箱号不存在');
 
         if (!this.cryptoUtil.validatePassword(loginDto.password, user.password)) {
 
             throw new NotFoundException('密码错误，请重新输入');
         }
+        return {
+            accessToken
+        };
     }
 }
