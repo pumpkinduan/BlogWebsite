@@ -1,7 +1,6 @@
 import {
     BadRequestException,
     ConflictException,
-    HttpException,
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
@@ -12,7 +11,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CryptoUtil, validateEmail, validateUserName } from 'utils/index.util';
 
 interface PayloadInterface {
-    account: string;
+    email: string;
     password: string;
 }
 
@@ -24,12 +23,10 @@ export class AuthService {
         private readonly cryptoUtil: CryptoUtil,
     ) { }
 
-    async getUser(account: string) {
+    async getUser(email: string) {
         let user: User = null;
-        if (validateUserName(account).status) {
-            user = await this.userService.findOneByUserName(account);
-        } else if (validateEmail(account).status) {
-            user = await this.userService.findOneByEmail(account);
+        if (validateEmail(email).status) {
+            user = await this.userService.findOneByEmail(email);
         }
         return user;
     }
@@ -39,12 +36,13 @@ export class AuthService {
     }
 
     async validateUser(payload: PayloadInterface): Promise<User | null> {
-        return await this.getUser(payload.account);;
+        return await this.getUser(payload.email);;
     }
 
     async register(registerDto: UserDto.CreateUserDto) {
         const res_email = validateEmail(registerDto.email);
-        const res_username = validateUserName(registerDto.username)
+        const res_username = validateUserName(registerDto.username);
+
         if (!res_email.status) {
             throw new BadRequestException(res_email.msg)
         }
@@ -71,11 +69,12 @@ export class AuthService {
     }
 
     async login(loginDto: UserDto.LoginDto) {
-        const user = await this.getUser(loginDto.account);
+        const user = await this.getUser(loginDto.email);
 
         if (!user) throw new NotFoundException('该用户名或邮箱号不存在');
 
         if (!this.cryptoUtil.validatePassword(loginDto.password, user.password)) {
+
             throw new NotFoundException('密码错误，请重新输入');
         }
     }

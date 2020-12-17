@@ -33,9 +33,9 @@ export namespace UserDto {
         password: string;
     }
     export class LoginDto {
-        @IsDefined()
-        @ApiProperty({ description: '邮箱或用户名' })
-        readonly account: email | username;
+        @IsEmail()
+        @ApiProperty({ description: '邮箱' })
+        readonly email: string;
 
         @IsDefined()
         @ApiProperty({ description: '登录密码' })

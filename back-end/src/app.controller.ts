@@ -42,7 +42,7 @@ export class AppController {
         @Body() loginDto: UserDto.LoginDto,
     ): Promise<ResultInterface> {
         await this.authService.login(loginDto);
-        const payload = { account: loginDto.account, password: loginDto.password };
+        const payload = { email: loginDto.email, password: loginDto.password };
         const accessToken = await this.authService.createToken(payload);
         return {
             success: true,
