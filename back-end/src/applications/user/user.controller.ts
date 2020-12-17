@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Query, Get, HttpStatus, Param, Post, Inject, ValidationPipe, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Query, Get, HttpStatus, Param, Post, Inject, Put, UseGuards } from '@nestjs/common';
 import { UserDto } from "common/dto/index.dto";
 import { ResultInterface, SuccessMessage, USER_TYPE } from 'common/interfaces/index.interface'
 import { ApiOperation, ApiTags, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
@@ -30,7 +30,7 @@ export class UserController {
 
     @ApiOperation({ description: '创建用户, 管理员或普通用户' })
     @Post('/create')
-    async createUser(@Body(new ValidationPipe({ transform: true })) createUserDto: UserDto.CreateUserDto): Promise<ResultInterface> {
+    async createUser(@Body() createUserDto: UserDto.CreateUserDto): Promise<ResultInterface> {
         await this.userRepository.create(createUserDto);
         return {
             statusCode: HttpStatus.OK,
@@ -41,7 +41,7 @@ export class UserController {
 
     @ApiOperation({ description: '更新管理员信息' })
     @Put('admin/:id')
-    async updateAdminProfiles(@Param('id') id: string, @Body(new ValidationPipe()) updateAdminProfilesDto: UserDto.UpdateAdminProfilesDto): Promise<ResultInterface> {
+    async updateAdminProfiles(@Param('id') id: string, @Body() updateAdminProfilesDto: UserDto.UpdateAdminProfilesDto): Promise<ResultInterface> {
         await this.userRepository.updateAdminProfiles(id, updateAdminProfilesDto);
         return {
             success: true,

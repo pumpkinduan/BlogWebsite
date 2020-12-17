@@ -4,7 +4,6 @@ import {
     Post,
     Body,
     HttpStatus,
-    ValidationPipe,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiProperty, ApiTags } from '@nestjs/swagger';
@@ -27,7 +26,7 @@ export class AppController {
     @ApiProperty({ description: '注册' })
     @Post('register')
     async register(
-        @Body(new ValidationPipe({ transform: true })) loginDto: UserDto.CreateUserDto,
+        @Body() loginDto: UserDto.CreateUserDto,
     ): Promise<ResultInterface> {
         await this.authService.register(loginDto);
         return {
@@ -40,7 +39,7 @@ export class AppController {
     @ApiProperty({ description: '登录' })
     @Post('login')
     async login(
-        @Body(new ValidationPipe({ transform: true })) loginDto: UserDto.LoginDto,
+        @Body() loginDto: UserDto.LoginDto,
     ): Promise<ResultInterface> {
         await this.authService.login(loginDto);
         const payload = { account: loginDto.account, password: loginDto.password };

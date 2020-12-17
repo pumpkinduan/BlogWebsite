@@ -10,7 +10,6 @@ import {
 	Inject,
 	HttpStatus,
 	ParseUUIDPipe,
-	ValidationPipe,
 	UseGuards,
 } from '@nestjs/common';
 import { PostDto } from 'common/dto/index.dto';
@@ -32,7 +31,7 @@ export class PostController {
 	@ApiBearerAuth()
 	@Post('/create')
 	async createPost(
-		@Body(new ValidationPipe({ transform: true }))
+		@Body()
 		createPostDto: PostDto.CreatePostDto,
 	): Promise<ResultInterface<PostEntity>> {
 		let post = await this.postService.create(createPostDto);
@@ -95,7 +94,7 @@ export class PostController {
 	@UseGuards(AuthGuard('jwt'))
 	@ApiBearerAuth()
 	@Delete(':id')
-	async deletePost(@Param('id') id: string): Promise<ResultInterface> {
+	async deletePost(@Param('id', new ParseUUIDPipe()) id: string): Promise<ResultInterface> {
 		await this.postService.deleteOneById(id);
 		return {
 			success: true,
@@ -109,7 +108,7 @@ export class PostController {
 	@ApiBearerAuth()
 	@Put(':id')
 	async updatePost(
-		@Body(new ValidationPipe()) updatePostDto: PostDto.UpdatePostDto,
+		@Body() updatePostDto: PostDto.UpdatePostDto,
 		@Param('id', new ParseUUIDPipe()) id: string,
 	): Promise<ResultInterface> {
 		await this.postService.update(id, updatePostDto);
