@@ -36,7 +36,6 @@ export class UserController {
     async getUserProfile(
         @Request() req
     ): Promise<ResultInterface> {
-        console.log(req.user);
         const data = await this.userRepository.findOneById(req.user.id);
         return {
             statusCode: HttpStatus.OK,
