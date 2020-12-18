@@ -25,8 +25,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    */
     async validate(payload: { email: string, id: string }) {
         const user = await this.authService.validateUser(payload);
-        console.log(user);
-
         if (!user) throw new UnauthorizedException(); // token虽然没过期，但是不对
         return user;
     }

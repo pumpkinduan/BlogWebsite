@@ -62,8 +62,10 @@ export class AuthService {
 
     async login(loginDto: UserDto.LoginDto) {
         const user = await this.userService.findOneByEmail(loginDto.email);
-        const accessToken = await this.createToken({ email: user.email, id: user.id });
+
         if (!user) throw new NotFoundException('该用户名或邮箱号不存在');
+
+        const accessToken = await this.createToken({ email: user.email, id: user.id });
 
         if (!this.cryptoUtil.validatePassword(loginDto.password, user.password)) {
 
