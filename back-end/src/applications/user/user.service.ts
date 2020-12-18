@@ -49,7 +49,7 @@ export class UserService {
     async updateAdminProfiles(id: string, updateProfileDto: UserDto.UpdateAdminProfilesDto): Promise<void> {
         const existing_admin = await this.userRepository.findOne(id);
         if (!existing_admin) throw new NotFoundException(`保存信息失败，ID 为${id}的管理员不存在`);
-        await this.userRepository.update(id, { 'profiles': updateProfileDto })
+        await this.userRepository.update(id, { profiles: updateProfileDto });
     }
 
     /**

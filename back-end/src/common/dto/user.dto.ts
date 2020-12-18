@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserInterface, USER_TYPE } from 'common/interfaces/index.interface';
-import { IsDefined, IsEmail, IsEnum } from 'class-validator';
+import { IsDefined, IsEmail, IsEnum, IsOptional } from 'class-validator';
 
 // 管理员DTO
 export namespace UserDto {
@@ -23,6 +23,7 @@ export namespace UserDto {
         })
         readonly type: USER_TYPE;
 
+        @IsOptional()
         @ApiProperty({ description: '博客地址' })
         readonly webUrl?: string;
 
@@ -52,7 +53,12 @@ export namespace UserDto {
         @ApiProperty({ description: '昵称', default: '伊内个南瓜瓜', enum: ['伊内个南瓜瓜'] })
         nickname: string;
 
+        @IsOptional()
         @ApiProperty({ description: '公告', default: '个人博客网站2.0即将发布，期待ing......', nullable: true, enum: ['个人博客网站2.0即将发布，期待ing......'] })
-        notice?: string;
+        notice: string;
+
+        @IsOptional()
+        @ApiProperty({ description: '头像' })
+        avatar: string;
     }
 }

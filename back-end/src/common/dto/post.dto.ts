@@ -1,6 +1,6 @@
 import { PostInterface } from 'common/interfaces/index.interface'
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDefined } from 'class-validator'
+import { IsDefined, IsOptional } from 'class-validator'
 export namespace PostDto {
 	export class CreatePostDto implements PostInterface.CreatePost {
 		@ApiProperty({ description: '封面地址' })
@@ -15,6 +15,7 @@ export namespace PostDto {
 		@IsDefined()
 		readonly status: PostInterface.status;
 
+		@IsOptional()
 		@ApiProperty({ description: '作者' })
 		readonly author?: string;
 
