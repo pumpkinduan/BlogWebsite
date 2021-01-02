@@ -9,7 +9,6 @@ import {
 } from 'typeorm';
 import { PostInterface } from 'common/interfaces/index.interface';
 import { Comment } from './index';
-import { IsBoolean } from 'class-validator';
 @Entity()
 export class Post {
   @PrimaryColumn({ generated: 'uuid' })

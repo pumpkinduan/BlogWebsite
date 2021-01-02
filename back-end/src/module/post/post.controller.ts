@@ -72,11 +72,29 @@ export class PostController {
 	}
 
 	@ApiOperation({ description: '获取文章详情' })
-	@Get(':id/comments')
+	@Get(':id/detail')
 	async getPostDetail(
 		@Param('id', new ParseUUIDPipe()) id: string,
 	): Promise<ResultInterface> {
 		let post = await this.postService.findOneById(id);
+		post = formatDate<PostEntity>(post, [
+			'createdAt',
+			'deletedAt',
+			'updatedAt',
+		]) as PostEntity;
+		return {
+			statusCode: HttpStatus.OK,
+			data: post,
+			message: SuccessMessage.Post.OK,
+			success: true,
+		};
+	}
+	@ApiOperation({ description: '获取指定文章的留言' })
+	@Get(':id/comments')
+	async getPostComments(
+		@Param('id', new ParseUUIDPipe()) id: string,
+	): Promise<ResultInterface> {
+		let post = await this.postService.findPostComments(id);
 		post = formatDate<PostEntity>(post, [
 			'createdAt',
 			'deletedAt',
