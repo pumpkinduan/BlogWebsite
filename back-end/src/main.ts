@@ -2,11 +2,13 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { HttpExceptionFilter } from 'common/filters'
-import { AuthGuard } from 'guard/auth.guard';
+import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+  app.setGlobalPrefix('v1');
   app.useGlobalFilters(new HttpExceptionFilter());
-  app.useGlobalGuards(new AuthGuard())
   const options = new DocumentBuilder()
     .addBearerAuth()
     .setTitle('博客API')

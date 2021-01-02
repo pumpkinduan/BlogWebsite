@@ -1,5 +1,5 @@
-import { Injectable } from '@nestjs/common';
-import { Post } from 'entity/index';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Post } from 'entities';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostInterface, USER_TYPE } from 'common/interfaces/index.interface';
@@ -35,28 +35,26 @@ export class PostService {
     async update(
         id: string,
         updatePost: PostInterface.UpdatePost,
-    ): Promise<Post> {
+    ): Promise<void> {
+        const existing_post = await this.postRepository.findOne(id);
+        if (!existing_post) throw new NotFoundException(`更新帖子失败，ID 为${id}的帖子不存在`);
         await this.postRepository.update(id, updatePost);
-        return await this.postRepository.findOne(id);
     }
     async findOneById(id: string): Promise<Post> {
-        return await this.postRepository.findOne(id);
-    }
-    async findPostComments(id: string): Promise<Post> {
         const post = await this.postRepository.findOne(id, {
             relations: ['comments', 'comments.user'],
         });
-        // post.comments.forEach(comment => {
-        //     if (comment.user.type === USER_TYPE.NORMAL) {
-        //         // 普通用户
-        //         Reflect.deleteProperty(comment.user, 'password');
-        //         Reflect.deleteProperty(comment.user, 'profiles');
-        //     }
-        //     if (comment.user.type === USER_TYPE.ADMIN) {
-        //         // 超级用户
-        //         Reflect.deleteProperty(comment.user, 'webUrl');
-        //     }
-        // });
+        post.comments.forEach(comment => {
+            if (comment.user.type === USER_TYPE.NORMAL) {
+                // 普通用户
+                Reflect.deleteProperty(comment.user, 'password');
+                Reflect.deleteProperty(comment.user, 'profiles');
+            }
+            if (comment.user.type === USER_TYPE.ADMIN) {
+                // 超级用户
+                Reflect.deleteProperty(comment.user, 'webUrl');
+            }
+        });
         return post;
     }
     async deleteOneById(id: string): Promise<void> {

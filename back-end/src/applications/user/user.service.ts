@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm'
 import { UserDto } from 'common/dto/index.dto'
-import { User } from 'entity'
+import { User } from 'entities'
 import { USER_TYPE } from 'common/interfaces/index.interface';
 @Injectable()
 export class UserService {
@@ -14,15 +14,15 @@ export class UserService {
      * 创建用户
      * @param createUser 用户信息
      */
-    async create(createUser: UserDto.CreateUserDto): Promise<User> {
-        return await this.userRepository.save(createUser);
+    async create(createUser: UserDto.CreateUserDto): Promise<void> {
+        await this.userRepository.save(createUser);
     }
 
     /**
      * 通过用户名 查询用户
      * @param username 用户名
      */
-    async findOneByUserName(username: string): Promise<User | undefined> {
+    async findOneByUserName(username: string): Promise<User> {
         return await this.userRepository.findOne({ where: { username } })
     }
 
@@ -30,17 +30,26 @@ export class UserService {
      * 通过邮箱 查询用户
      * @param email 用户名
      */
-    async findOneByEmail(email: string): Promise<User | undefined> {
-        return await this.userRepository.findOne({ where: { email } })
+    async findOneByEmail(email: string): Promise<User> {
+        return await this.userRepository.findOne({ where: { email }, select: ['id', 'password', 'email'] })
     }
 
     /**
      * 通过id 查询用户
      * @param id 用户id
      */
-    async findOneById(id: string): Promise<User | undefined> {
-        return await this.userRepository.findOne(id)
+    async findOneById(id: string): Promise<User> {
+        return await this.userRepository.findOne(id, { select: ['email', 'id', 'profiles', 'type', 'username', 'webUrl'] });
+    }
 
+    /**
+     * @param id 管理员id
+     * @param updateProfileDto 管理员的基础信息
+     */
+    async updateAdminProfiles(id: string, updateProfileDto: UserDto.UpdateAdminProfilesDto): Promise<void> {
+        const existing_admin = await this.userRepository.findOne(id);
+        if (!existing_admin) throw new NotFoundException(`保存信息失败，ID 为${id}的管理员不存在`);
+        await this.userRepository.update(id, { profiles: updateProfileDto });
     }
 
     /**
@@ -62,10 +71,12 @@ export class UserService {
         type: USER_TYPE
     ): Promise<[User[], number]> {
         const offset = page * pageSize - pageSize;
+        const select: (keyof User)[] = type === USER_TYPE.NORMAL ? ['email', 'id', 'username', 'webUrl'] : ['email', 'id', 'username', 'profiles']
         return await this.userRepository.findAndCount({
             skip: offset,
             take: pageSize,
-            where: { type: type }
+            where: { type: type },
+            select: select
         });
     }
 }

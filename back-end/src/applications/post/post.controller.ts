@@ -10,7 +10,6 @@ import {
 	Inject,
 	HttpStatus,
 	ParseUUIDPipe,
-	ValidationPipe,
 	UseGuards,
 } from '@nestjs/common';
 import { PostDto } from 'common/dto/index.dto';
@@ -18,24 +17,23 @@ import {
 	ResultInterface,
 	SuccessMessage,
 } from 'common/interfaces/index.interface';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { PostService } from './post.service';
-import { formatDate } from 'utils';
-import { Post as PostEntity } from 'entity/post.entity';
+import { formatDate } from 'utils/index.util';
+import { Post as PostEntity } from 'entities';
 import { AuthGuard } from '@nestjs/passport';
-
-@UseGuards(AuthGuard('jwt'))
-@ApiBearerAuth()
 @Controller('posts')
 @ApiTags('文章')
 export class PostController {
 	constructor(@Inject(PostService) private readonly postService: PostService) { }
 	@ApiOperation({ description: '创建文章' })
+	@UseGuards(AuthGuard('jwt'))
+	@ApiBearerAuth()
 	@Post('/create')
 	async createPost(
-		@Body(new ValidationPipe({ transform: true }))
+		@Body()
 		createPostDto: PostDto.CreatePostDto,
-	): Promise<ResultInterface> {
+	): Promise<ResultInterface<PostEntity>> {
 		let post = await this.postService.create(createPostDto);
 		// NOTE: 将UTC格式的时间进行转换
 		post = formatDate<PostEntity>(post, [
@@ -45,7 +43,7 @@ export class PostController {
 		]) as PostEntity;
 		return {
 			success: true,
-			data: [post],
+			data: post,
 			statusCode: HttpStatus.OK,
 			message: SuccessMessage.Post.CREATE,
 		};
@@ -53,6 +51,8 @@ export class PostController {
 
 	@ApiOperation({ description: '获取文章列表' })
 	@Get()
+	@ApiQuery({ name: 'page', })
+	@ApiQuery({ name: 'pageSize' })
 	async getPosts(
 		@Query('page') page = 1,
 		@Query('pageSize') pageSize = 10,
@@ -109,8 +109,10 @@ export class PostController {
 	}
 
 	@ApiOperation({ description: '删除文章' })
+	@UseGuards(AuthGuard('jwt'))
+	@ApiBearerAuth()
 	@Delete(':id')
-	async deletePost(@Param('id') id: string): Promise<ResultInterface> {
+	async deletePost(@Param('id', new ParseUUIDPipe()) id: string): Promise<ResultInterface> {
 		await this.postService.deleteOneById(id);
 		return {
 			success: true,
@@ -120,22 +122,18 @@ export class PostController {
 	}
 
 	@ApiOperation({ description: '更新文章' })
+	@UseGuards(AuthGuard('jwt'))
+	@ApiBearerAuth()
 	@Put(':id')
 	async updatePost(
-		@Body(new ValidationPipe()) updatePostDto: PostDto.UpdatePostDto,
+		@Body() updatePostDto: PostDto.UpdatePostDto,
 		@Param('id', new ParseUUIDPipe()) id: string,
 	): Promise<ResultInterface> {
-		let post = await this.postService.update(id, updatePostDto);
-		post = formatDate<PostEntity>(post, [
-			'createdAt',
-			'deletedAt',
-			'updatedAt',
-		]) as PostEntity;
+		await this.postService.update(id, updatePostDto);
 		return {
 			success: true,
-			data: post,
 			statusCode: HttpStatus.OK,
-			message: SuccessMessage.Post.UPDATE
+			message: SuccessMessage.Post.UPDATE,
 		};
 	}
 }

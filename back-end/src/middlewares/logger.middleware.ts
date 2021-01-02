@@ -2,7 +2,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response } from 'express';
 import * as dayjs from 'dayjs'
 import { ReqLoggerInterface } from 'common/interfaces/index.interface'
-import { createLoggerPrefix } from 'utils'
+import { createLoggerPrefix } from 'utils/index.util'
 const fs = require('fs')
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {

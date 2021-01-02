@@ -4,15 +4,15 @@ import {
     Injectable,
     NotFoundException,
 } from '@nestjs/common';
-import { UserService } from 'module/user/user.service';
-import { User } from 'entity';
+import { UserService } from 'applications/user/user.service';
+import { User } from 'entities';
 import { UserDto } from 'common/dto/index.dto';
 import { JwtService } from '@nestjs/jwt';
-import { CryptoUtil, validateEmail, validateUserName } from 'utils';
+import { CryptoUtil, validateEmail, validateUserName } from 'utils/index.util';
 
 interface PayloadInterface {
-    account: string;
-    password: string;
+    email: string;
+    id: string;
 }
 
 @Injectable()
@@ -22,31 +22,25 @@ export class AuthService {
         private readonly jwtService: JwtService,
         private readonly cryptoUtil: CryptoUtil,
     ) { }
-
-    async getUser(account: string) {
-        let user: User = null;
-        if (validateUserName(account).status) {
-            user = await this.userService.findOneByUserName(account);
-        } else if (validateEmail(account).status) {
-            user = await this.userService.findOneByUserName(account);
-        }
-        return user;
-    }
-
     async createToken(payload: PayloadInterface) {
         return await this.jwtService.sign(payload);
     }
 
-    async validateUser(payload: PayloadInterface): Promise<User | null> {
-        return await this.getUser(payload.account);;
+    async validateUser(payload: PayloadInterface): Promise<User> {
+        return await this.userService.findOneByEmail(payload.email);
+
     }
 
     async register(registerDto: UserDto.CreateUserDto) {
+        const res_email = validateEmail(registerDto.email);
+        const res_username = validateUserName(registerDto.username);
 
-        if (!validateEmail(registerDto.email).status || !validateUserName(registerDto.username).status) {
-            throw new BadRequestException('用户名或邮箱格式不正确')
+        if (!res_email.status) {
+            throw new BadRequestException(res_email.msg)
         }
-
+        if (!res_username.status) {
+            throw new BadRequestException(res_username.msg)
+        }
         const existing_user = await this.userService.findOneByUserName(
             registerDto.username,
         );
@@ -67,12 +61,18 @@ export class AuthService {
     }
 
     async login(loginDto: UserDto.LoginDto) {
-        const user = await this.getUser(loginDto.account);
+        const user = await this.userService.findOneByEmail(loginDto.email);
 
         if (!user) throw new NotFoundException('该用户名或邮箱号不存在');
 
+        const accessToken = await this.createToken({ email: user.email, id: user.id });
+
         if (!this.cryptoUtil.validatePassword(loginDto.password, user.password)) {
+
             throw new NotFoundException('密码错误，请重新输入');
         }
+        return {
+            accessToken
+        };
     }
 }

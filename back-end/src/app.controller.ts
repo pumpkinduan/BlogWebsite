@@ -2,14 +2,13 @@ import {
     Controller,
     Get,
     Post,
-
     Body,
     HttpStatus,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiProperty, ApiTags } from '@nestjs/swagger';
 import { UserDto } from 'common/dto/index.dto';
-import { AuthService } from 'module/auth/auth.service';
+import { AuthService } from 'applications/auth/auth.service';
 import { ResultInterface, SuccessMessage } from 'common/interfaces/result.interface';
 @Controller()
 @ApiTags('默认')
@@ -38,21 +37,16 @@ export class AppController {
     }
 
     @ApiProperty({ description: '登录' })
-    // @UseGuards(AuthGuard('jwt'))
     @Post('login')
     async login(
         @Body() loginDto: UserDto.LoginDto,
     ): Promise<ResultInterface> {
-        await this.authService.login(loginDto);
-        const payload = { account: loginDto.account, password: loginDto.password };
-        const accessToken = await this.authService.createToken(payload);
+        const data = await this.authService.login(loginDto);
         return {
             success: true,
             message: SuccessMessage.User.LOGIN,
             statusCode: HttpStatus.OK,
-            data: {
-                accessToken
-            }
+            data
         }
     }
 }
