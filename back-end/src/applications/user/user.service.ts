@@ -71,7 +71,9 @@ export class UserService {
         type: USER_TYPE
     ): Promise<[User[], number]> {
         const offset = page * pageSize - pageSize;
-        const select: (keyof User)[] = type === USER_TYPE.NORMAL ? ['email', 'id', 'username', 'webUrl'] : ['email', 'id', 'username', 'profiles']
+        const select: (keyof User)[] = ['email', 'id', 'username'];
+        if (type === USER_TYPE.NORMAL) { select.push('webUrl') }
+        if (type === USER_TYPE.ADMIN) { select.push('profiles') }
         return await this.userRepository.findAndCount({
             skip: offset,
             take: pageSize,

@@ -24,7 +24,7 @@ export namespace UserDto {
         readonly type: USER_TYPE;
 
         @IsOptional()
-        @ApiProperty({ description: '博客地址' })
+        @ApiProperty({ description: '博客地址', required: false })
         readonly webUrl?: string;
 
         @IsDefined()
@@ -54,11 +54,11 @@ export namespace UserDto {
         nickname: string;
 
         @IsOptional()
-        @ApiProperty({ description: '公告', default: '个人博客网站2.0即将发布，期待ing......', nullable: true, enum: ['个人博客网站2.0即将发布，期待ing......'] })
+        @ApiProperty({ required: false, description: '公告', default: '个人博客网站2.0即将发布，期待ing......', enum: ['个人博客网站2.0即将发布，期待ing......'] })
         notice: string;
 
         @IsOptional()
-        @ApiProperty({ description: '头像' })
+        @ApiProperty({ description: '头像', required: false })
         avatar: string;
     }
 }

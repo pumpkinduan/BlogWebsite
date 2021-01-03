@@ -1,7 +1,6 @@
 import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
 import { UserInterface, USER_TYPE } from 'common/interfaces/index.interface';
 import { Comment } from './index';
-import { IsDefined, IsEnum } from 'class-validator';
 @Entity()
 export class User {
   @PrimaryColumn({ generated: 'uuid' })
@@ -14,7 +13,6 @@ export class User {
   email: string;
 
   @Column()
-  @IsEnum(USER_TYPE)
   type: USER_TYPE;
 
   @Column({ nullable: true })
@@ -30,6 +28,5 @@ export class User {
   profiles?: UserInterface.AdminProfiles;
 
   @Column()
-  @IsDefined()
   password: string;
 }

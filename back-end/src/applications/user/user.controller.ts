@@ -12,8 +12,8 @@ export class UserController {
     ) { }
 
     @ApiOperation({ description: '获取用户, 根据role来获取对应的用户类型' })
-    @ApiQuery({ name: 'page', })
-    @ApiQuery({ name: 'pageSize' })
+    @ApiQuery({ name: 'page', example: 1 })
+    @ApiQuery({ name: 'pageSize', example: 10 })
     @ApiQuery({ name: 'type', enum: USER_TYPE })
     @Get()
     async getUsers(
