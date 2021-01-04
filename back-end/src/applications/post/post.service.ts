@@ -3,6 +3,7 @@ import { Post } from 'entities';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostInterface, USER_TYPE } from 'common/interfaces/index.interface';
+import { formatDate } from 'utils/index.util';
 @Injectable()
 export class PostService {
     constructor(
@@ -42,9 +43,11 @@ export class PostService {
     }
     async findOneById(id: string): Promise<Post> {
         const post = await this.postRepository.findOne(id, {
-            relations: ['comments', 'comments.user'],
+            relations: ['comments', 'comments.sourceUser', 'comments.replies'],
         });
         post.comments.forEach(comment => {
+            // NOTE: 将UTC格式的时间进行转换
+            formatDate(comment, ['createdAt', 'deletedAt', 'updatedAt']);
             Reflect.deleteProperty(comment.sourceUser, 'password');
             if (comment.sourceUser.type === USER_TYPE.NORMAL) {
                 // 普通用户

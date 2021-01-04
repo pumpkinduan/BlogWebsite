@@ -33,13 +33,7 @@ export class PostController {
 		@Body()
 		createPostDto: PostDto.CreatePostDto,
 	): Promise<ResultInterface<PostEntity>> {
-		let post = await this.postService.create(createPostDto);
-		// NOTE: 将UTC格式的时间进行转换
-		post = formatDate<PostEntity>(post, [
-			'createdAt',
-			'deletedAt',
-			'updatedAt',
-		]) as PostEntity;
+		const post = await this.postService.create(createPostDto);
 		return {
 			success: true,
 			data: post,
