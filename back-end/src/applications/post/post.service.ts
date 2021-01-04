@@ -19,12 +19,12 @@ export class PostService {
             take: pageSize,
             select: [
                 'id',
-                'createdAt',
-                'title',
-                'visitors',
-                'downloads',
                 'coverUrl',
+                'description',
+                'title',
+                'browsers',
                 'likes',
+                'comments'
             ],
         });
     }
@@ -45,14 +45,14 @@ export class PostService {
             relations: ['comments', 'comments.user'],
         });
         post.comments.forEach(comment => {
-            Reflect.deleteProperty(comment.user, 'password');
-            if (comment.user.type === USER_TYPE.NORMAL) {
+            Reflect.deleteProperty(comment.sourceUser, 'password');
+            if (comment.sourceUser.type === USER_TYPE.NORMAL) {
                 // 普通用户
-                Reflect.deleteProperty(comment.user, 'profiles');
+                Reflect.deleteProperty(comment.sourceUser, 'profiles');
             }
-            if (comment.user.type === USER_TYPE.ADMIN) {
+            if (comment.sourceUser.type === USER_TYPE.ADMIN) {
                 // 超级用户
-                Reflect.deleteProperty(comment.user, 'webUrl');
+                Reflect.deleteProperty(comment.sourceUser, 'webUrl');
             }
         });
         return post;

@@ -5,7 +5,7 @@ import { PostModule } from 'applications/post/post.module';
 import { CommentModule } from 'applications/comment/comment.module';
 import { UserModule } from 'applications/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Comment, User, Post } from 'entities'
+import { Comment, User, Post, Reply } from 'entities'
 import { LoggerMiddleware } from 'middlewares/logger.middleware';
 import { PassportModule } from '@nestjs/passport'
 import { AuthModule } from './applications/auth/auth.module';
@@ -18,7 +18,7 @@ import { AuthModule } from './applications/auth/auth.module';
       username: "root",
       password: "pumpkin108",
       database: "my_website",
-      entities: [Comment, Post, User],
+      entities: [Comment, Post, User, Reply],
       synchronize: true
     })
   })), PostModule, CommentModule, UserModule, AuthModule, PassportModule],

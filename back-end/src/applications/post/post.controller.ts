@@ -91,7 +91,7 @@ export class PostController {
 	@ApiOperation({ description: '获取指定文章的留言' })
 	@Get(':id/comments')
 	async getPostComments(
-		@Param('id', new ParseUUIDPipe()) id: string,
+		@Param('id') id: string,
 	): Promise<ResultInterface> {
 		let post = await this.postService.findPostComments(id);
 		post = formatDate<PostEntity>(post, [

@@ -1,7 +1,6 @@
 import { Entity, Column, PrimaryColumn, ManyToOne, CreateDateColumn } from 'typeorm';
 import { User, Comment } from './'
 
-type replyId = string;
 @Entity()
 export class Reply {
     @PrimaryColumn()
@@ -13,9 +12,12 @@ export class Reply {
     @CreateDateColumn({ comment: '创建时间' })
     createdAt: string;
 
-    @ManyToOne(() => User)
+    @ManyToOne(() => User, user => user.replies)
     targetUser: User; // 回复的目标用户
 
     @ManyToOne(() => User)
     sourceUser: User; // 回复的来源用户
+
+    @ManyToOne(() => Comment, comment => comment.replies)
+    comment: Comment;
 }   

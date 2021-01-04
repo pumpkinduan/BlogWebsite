@@ -11,19 +11,19 @@ import { PostInterface } from 'common/interfaces/index.interface';
 import { Comment } from './index';
 @Entity()
 export class Post {
-  @PrimaryColumn()
+  @PrimaryColumn({ length: 12 })
   id: string;
 
   @Column()
   status: PostInterface.status;
 
-  @Column({ default: 'Pumpkin' })
+  @Column({ default: 'Pumpkin', length: 32 })
   author: string;
 
   @Column('text')
   content: string;
 
-  @Column()
+  @Column({ length: 2048 })
   description: string;
 
   // 会自动转换数组为字符串

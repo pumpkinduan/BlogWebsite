@@ -1,8 +1,6 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, CreateDateColumn } from 'typeorm';
-import { User } from './user.entity'
-import { Post } from './post.entity'
+import { Entity, Column, PrimaryColumn, ManyToOne, CreateDateColumn, OneToMany } from 'typeorm';
+import { User, Post, Reply } from './'
 
-type replyId = string;
 @Entity()
 export class Comment {
     @PrimaryColumn()
@@ -15,10 +13,10 @@ export class Comment {
     createdAt: string;
 
     @ManyToOne(() => User, user => user.comments)
-    user: User; // 留言关联的用户，与用户为多对一关系
+    sourceUser: User; // 留言关联的用户，与用户为多对一关系
 
-    @Column({ type: 'simple-array' })
-    children: replyId[]// 回复
+    @OneToMany(() => Reply, reply => reply.comment)
+    replies: Reply[]// 回复  
 
     @ManyToOne(() => Post, post => post.comments)
     post: Post;

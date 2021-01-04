@@ -1,32 +1,38 @@
 import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
 import { UserInterface, USER_TYPE } from 'common/interfaces/index.interface';
-import { Comment } from './index';
+import { Comment, Reply } from './index';
 @Entity()
 export class User {
-  @PrimaryColumn()
-  id: string;
+	@PrimaryColumn()
+	id: string;
 
-  @Column()
-  username: string;
+	@Column()
+	username: string;
 
-  @Column()
-  email: string;
+	@Column()
+	email: string;
 
-  @Column()
-  type: USER_TYPE;
+	@Column()
+	type: USER_TYPE;
 
-  @Column({ nullable: true })
-  webUrl?: string;
+	@Column({ nullable: true })
+	webUrl?: string;
 
-  @OneToMany(
-    () => Comment,
-    comment => comment.user,
-  )
-  comments: Comment[]; // 用户关联的留言，与留言为一对多关系
+	@OneToMany(
+		() => Comment,
+		comment => comment.sourceUser,
+	)
+	comments: Comment[]; // 用户关联的留言，与留言为一对多关系
 
-  @Column('json', { nullable: true })
-  profiles?: UserInterface.AdminProfiles;
+	@OneToMany(
+		() => Reply,
+		reply => reply.sourceUser,
+	)
+	replies: Reply[];
 
-  @Column()
-  password: string;
+	@Column('json', { nullable: true })
+	profiles?: UserInterface.AdminProfiles;
+
+	@Column()
+	password: string;
 }
