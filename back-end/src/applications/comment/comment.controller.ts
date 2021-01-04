@@ -29,8 +29,7 @@ export class CommentController {
     @UseGuards(AuthGuard('jwt'))
     @Post('/create')
     async createComment(@Body() createCommentDto: CommentDto.CreateCommentDto, @Request() req): Promise<ResultInterface> {
-        console.log(req.user);
-        const comment = await this.commentRepository.create(createCommentDto, req.user.id)
+        const comment = await this.commentRepository.create({ ...createCommentDto, sourceUserId: req.user.id })
         return {
             success: true,
             data: comment,

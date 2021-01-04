@@ -2,19 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentDto } from 'common/dto/index.dto'
-import { Comment, Post } from 'entities'
+import { Comment, Post, User } from 'entities'
+import { USER_TYPE } from 'common/interfaces/user.interface';
+import { formatDate } from 'utils/index.util';
 @Injectable()
 export class CommentService {
     constructor(
         @InjectRepository(Comment) readonly commentRepository: Repository<Comment>,
-        @InjectRepository(Post) readonly PostRepository: Repository<Post>,
+        @InjectRepository(Post) readonly postRepository: Repository<Post>,
+        @InjectRepository(User) readonly userRepository: Repository<User>,
     ) { }
-    async create(createComment: CommentDto.CreateCommentDto, userId: string): Promise<Comment> {
-        const children = createComment.parentId ? [createComment.parentId] : [];
+    async create(createComment: CommentDto.CreateCommentDto): Promise<Comment> {
         // 建立了外键关系时，save时必须传入实体
-        const newComment = await this.commentRepository.save(Object.assign(createComment, { children: [], post: { id: createComment.postId }, user: { id: userId } }));
-
-        return newComment;
+        const comment = this.commentRepository.create(createComment);
+        const sourceUser = await this.userRepository.findOne(createComment.sourceUserId, { select: ['email', 'id', 'profiles', 'username', 'type', 'webUrl'] });
+        comment.sourceUser = sourceUser;
+        comment.post = { id: createComment.postId };
+        return await this.commentRepository.save(comment);
     }
 
     async deleteOneById(id: string): Promise<void> {
@@ -25,10 +29,23 @@ export class CommentService {
         pageSize: number): Promise<[Comment[], number]> {
         // 分页
         const offset = page * pageSize - pageSize;
-        return await this.commentRepository.findAndCount({
+        const comments = await this.commentRepository.findAndCount({
             skip: offset,
             take: pageSize,
-            relations: ['post', 'user']
+            relations: ['sourceUser', 'replies', 'replies.comment']
         });
+        comments[0].forEach(comment => {
+            formatDate(comment, ['createdAt']);
+            Reflect.deleteProperty(comment.sourceUser, 'password');
+            if (comment.sourceUser.type === USER_TYPE.NORMAL) {
+                // 普通用户
+                Reflect.deleteProperty(comment.sourceUser, 'profiles');
+            }
+            if (comment.sourceUser.type === USER_TYPE.ADMIN) {
+                // 超级用户
+                Reflect.deleteProperty(comment.sourceUser, 'webUrl');
+            }
+        });
+        return comments;
     }
 }
