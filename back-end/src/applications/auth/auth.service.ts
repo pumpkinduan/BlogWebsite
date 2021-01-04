@@ -12,7 +12,7 @@ import { CryptoUtil, validateEmail, validateUserName } from 'utils/index.util';
 
 interface PayloadInterface {
     email: string;
-    id: string;
+    id: number;
 }
 
 @Injectable()

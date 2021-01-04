@@ -4,7 +4,7 @@ export namespace CommentDto {
     export class CreateCommentDto {
         @IsDefined()
         @ApiProperty({ description: '留言的用户id' })
-        readonly sourceUserId: string;
+        readonly sourceUserId: number;
 
         @IsNotEmpty()
         @ApiProperty({ description: '留言内容' })
@@ -12,6 +12,6 @@ export namespace CommentDto {
 
         @IsDefined()
         @ApiProperty({ description: '留言所属的主题id' })
-        readonly postId: string;
+        readonly postId: number;
     }
 }

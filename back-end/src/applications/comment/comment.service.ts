@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CommentDto } from 'common/dto/index.dto'
-import { Comment, Post, User } from 'entities'
-import { USER_TYPE } from 'common/interfaces/user.interface';
-import { formatDate } from 'utils/index.util';
+import { CommentDto } from 'common/dto/index.dto';
+import { Comment, Post, User } from 'entities';
 @Injectable()
 export class CommentService {
     constructor(
@@ -12,40 +10,79 @@ export class CommentService {
         @InjectRepository(Post) readonly postRepository: Repository<Post>,
         @InjectRepository(User) readonly userRepository: Repository<User>,
     ) { }
+
     async create(createComment: CommentDto.CreateCommentDto): Promise<Comment> {
         // 建立了外键关系时，save时必须传入实体
         const comment = this.commentRepository.create(createComment);
-        const sourceUser = await this.userRepository.findOne(createComment.sourceUserId, { select: ['email', 'id', 'profiles', 'username', 'type', 'webUrl'] });
+        const sourceUser = await this.userRepository.findOne(
+            createComment.sourceUserId,
+            { select: ['email', 'id', 'profiles', 'username', 'type', 'webUrl'] },
+        );
         comment.sourceUser = sourceUser;
         comment.post = { id: createComment.postId };
         return await this.commentRepository.save(comment);
     }
 
-    async deleteOneById(id: string): Promise<void> {
+    async deleteOneById(id: number): Promise<void> {
         await this.commentRepository.delete(id);
     }
 
-    async findAndCount(page: number,
-        pageSize: number): Promise<[Comment[], number]> {
+    // 获取指定留言下的回复列表
+    async findCommentRepliesById(id: number, pageSize = 10) {
+        return await this.commentRepository
+            .createQueryBuilder('comment')
+            .select([
+                'comment.id',
+                'comment.content',
+                'comment.createdAt',
+                'reply.id',
+                'reply.content',
+                'reply.createdAt',
+                'sourceUser.id',
+                'sourceUser.username',
+                'reply_sourceUser.id',
+                'reply_sourceUser.username',
+                'reply_targetUser.id',
+                'reply_targetUser.username'
+            ])
+            .leftJoin('comment.sourceUser', 'sourceUser')
+            .leftJoin('comment.replies', 'reply')
+            .leftJoin('reply.sourceUser', 'reply_sourceUser')
+            .leftJoin('reply.targetUser', 'reply_targetUser')
+            .where('comment.id = :id', { id })
+            .take(pageSize)
+            .getManyAndCount()
+    }
+
+    // 按照分页获取留言列表
+    async findAndCount(
+        page: number,
+        pageSize: number,
+    ): Promise<[Comment[], number]> {
         // 分页
         const offset = page * pageSize - pageSize;
-        const comments = await this.commentRepository.findAndCount({
-            skip: offset,
-            take: pageSize,
-            relations: ['sourceUser', 'replies', 'replies.comment']
-        });
-        comments[0].forEach(comment => {
-            formatDate(comment, ['createdAt']);
-            Reflect.deleteProperty(comment.sourceUser, 'password');
-            if (comment.sourceUser.type === USER_TYPE.NORMAL) {
-                // 普通用户
-                Reflect.deleteProperty(comment.sourceUser, 'profiles');
-            }
-            if (comment.sourceUser.type === USER_TYPE.ADMIN) {
-                // 超级用户
-                Reflect.deleteProperty(comment.sourceUser, 'webUrl');
-            }
-        });
-        return comments;
+        return await this.commentRepository
+            .createQueryBuilder('comment')
+            .select([
+                'comment.id',
+                'comment.content',
+                'comment.createdAt',
+                'reply.id',
+                'reply.content',
+                'reply.createdAt',
+                'sourceUser.id',
+                'sourceUser.username',
+                'reply_sourceUser.id',
+                'reply_sourceUser.username',
+                'reply_targetUser.id',
+                'reply_targetUser.username'
+            ])
+            .leftJoin('comment.sourceUser', 'sourceUser')
+            .leftJoin('comment.replies', 'reply')
+            .leftJoin('reply.sourceUser', 'reply_sourceUser')
+            .leftJoin('reply.targetUser', 'reply_targetUser')
+            .take(pageSize)
+            .skip(offset)
+            .getManyAndCount()
     }
 }

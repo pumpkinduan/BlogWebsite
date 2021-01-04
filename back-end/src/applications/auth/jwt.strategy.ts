@@ -23,7 +23,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
      * 当用户存在时，会将 user 对象添加到 req 中，在之后的 req 对象中，可以使用 req.user 获取当前登录用户。
      * user对象的值便是validate方法的返回值
    */
-    async validate(payload: { email: string, id: string }) {
+    async validate(payload: { email: string, id: number }) {
         const user = await this.authService.validateUser(payload);
         if (!user) throw new UnauthorizedException(); // token虽然没过期，但是不对
         return user;

@@ -2,23 +2,20 @@ import { ApiProperty } from "@nestjs/swagger";
 import { IsDefined, IsOptional } from 'class-validator'
 export namespace ReplyDto {
     export class CreateReplyDto {
-        @ApiProperty({ description: '留言内容' })
+        @IsDefined()
+        @ApiProperty({ description: '回复内容' })
         readonly content: string;
 
         @IsDefined()
-        @ApiProperty({ description: '留言的文章id' })
-        readonly postId: string;
-
-        @IsDefined()
-        @ApiProperty()
-        readonly sourceUserId: string;
+        @ApiProperty({ description: '评论人id' })
+        readonly sourceUserId: number;
 
         @IsOptional()
         @ApiProperty({ description: '父级留言id', nullable: true, required: false })
-        readonly commentId: string;
+        readonly commentId: number;
 
         @IsOptional()
-        @ApiProperty({ nullable: true, required: false })
-        readonly targetUserId: string;
+        @ApiProperty({ nullable: true, required: false, description: '评论的目标对象id' })
+        readonly targetUserId: number;
     }
 }

@@ -12,9 +12,9 @@ import { Comment } from './index';
 @Entity()
 export class Post {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: false, default: PostInterface.STATUS.DRAFTED })
   status: PostInterface.status;
 
   @Column({ default: 'Pumpkin', length: 32 })
@@ -35,6 +35,9 @@ export class Post {
     comment => comment.post,
   )
   comments: Comment[];
+
+  @Column({ default: 0 })
+  totalComments: number;
 
   @Column({ nullable: true })
   coverUrl: string;

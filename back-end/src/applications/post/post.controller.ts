@@ -10,6 +10,7 @@ import {
 	Inject,
 	HttpStatus,
 	UseGuards,
+	ParseIntPipe,
 } from '@nestjs/common';
 import { PostDto } from 'common/dto/index.dto';
 import {
@@ -51,11 +52,11 @@ export class PostController {
 		@Query('pageSize') pageSize = 10,
 	): Promise<ResultInterface> {
 		const posts = await this.postService.findAndCount(page, pageSize);
-		posts[0] = formatDate<PostEntity>(posts[0], [
-			'createdAt',
-			'deletedAt',
-			'updatedAt',
-		]) as PostEntity[];
+		// posts[0] = formatDate<PostEntity>(posts[0], [
+		// 	'createdAt',
+		// 	'deletedAt',
+		// 	'updatedAt',
+		// ]) as PostEntity[];
 		return {
 			statusCode: HttpStatus.OK,
 			data: posts,
@@ -67,7 +68,7 @@ export class PostController {
 	@ApiOperation({ description: '获取文章详情' })
 	@Get(':id/detail')
 	async getPostDetail(
-		@Param('id') id: string,
+		@Param('id', new ParseIntPipe()) id: number,
 	): Promise<ResultInterface> {
 		let post = await this.postService.findOneById(id);
 		post = formatDate<PostEntity>(post, [
@@ -85,7 +86,7 @@ export class PostController {
 	@ApiOperation({ description: '获取指定文章的留言' })
 	@Get(':id/comments')
 	async getPostComments(
-		@Param('id') id: string,
+		@Param('id', new ParseIntPipe()) id: number,
 	): Promise<ResultInterface> {
 		let post = await this.postService.findPostComments(id);
 		post = formatDate<PostEntity>(post, [
@@ -105,7 +106,7 @@ export class PostController {
 	@UseGuards(AuthGuard('jwt'))
 	@ApiBearerAuth()
 	@Delete(':id')
-	async deletePost(@Param('id') id: string): Promise<ResultInterface> {
+	async deletePost(@Param('id', new ParseIntPipe()) id: number): Promise<ResultInterface> {
 		await this.postService.deleteOneById(id);
 		return {
 			success: true,
@@ -120,7 +121,7 @@ export class PostController {
 	@Put(':id')
 	async updatePost(
 		@Body() updatePostDto: PostDto.UpdatePostDto,
-		@Param('id') id: string,
+		@Param('id', new ParseIntPipe()) id: number,
 	): Promise<ResultInterface> {
 		await this.postService.update(id, updatePostDto);
 		return {
