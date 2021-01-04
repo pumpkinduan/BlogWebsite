@@ -6,13 +6,13 @@ export class User {
 	@PrimaryGeneratedColumn()
 	id: string;
 
-	@Column()
+	@Column({ nullable: false })
 	username: string;
 
-	@Column()
+	@Column({ nullable: false })
 	email: string;
 
-	@Column()
+	@Column({ nullable: false })
 	type: USER_TYPE;
 
 	@Column({ nullable: true })
@@ -33,6 +33,6 @@ export class User {
 	@Column('json', { nullable: true })
 	profiles?: UserInterface.AdminProfiles;
 
-	@Column()
+	@Column({ nullable: false })
 	password: string;
 }

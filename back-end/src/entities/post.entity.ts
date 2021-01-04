@@ -14,20 +14,20 @@ export class Post {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column()
+  @Column({ nullable: false })
   status: PostInterface.status;
 
   @Column({ default: 'Pumpkin', length: 32 })
   author: string;
 
-  @Column('text')
+  @Column('text', { nullable: false })
   content: string;
 
-  @Column({ length: 2048 })
+  @Column({ length: 2048, nullable: false })
   description: string;
 
   // 会自动转换数组为字符串
-  @Column('simple-array')
+  @Column('simple-array', { nullable: false })
   tags: string[]; // 'js, ts, css'
 
   @OneToMany(
@@ -36,10 +36,10 @@ export class Post {
   )
   comments: Comment[];
 
-  @Column()
+  @Column({ nullable: true })
   coverUrl: string;
 
-  @Column()
+  @Column({ nullable: false })
   title: string;
 
   //自动生成

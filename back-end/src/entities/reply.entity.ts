@@ -6,7 +6,7 @@ export class Reply {
     @PrimaryGeneratedColumn()
     id: string;
 
-    @Column()
+    @Column({ nullable: false })
     content: string;
 
     @CreateDateColumn({ comment: '创建时间' })
