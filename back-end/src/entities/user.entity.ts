@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { UserInterface, USER_TYPE } from 'common/interfaces/index.interface';
 import { Comment, Reply } from './index';
 @Entity()
 export class User {
-	@PrimaryColumn()
+	@PrimaryGeneratedColumn()
 	id: string;
 
 	@Column()

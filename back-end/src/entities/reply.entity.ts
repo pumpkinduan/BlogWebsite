@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn } from 'typeorm';
 import { User, Comment } from './'
 
 @Entity()
 export class Reply {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     id: string;
 
     @Column()

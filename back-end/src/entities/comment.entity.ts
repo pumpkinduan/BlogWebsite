@@ -1,9 +1,9 @@
-import { Entity, Column, PrimaryColumn, ManyToOne, CreateDateColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, OneToMany } from 'typeorm';
 import { User, Post, Reply } from './'
 
 @Entity()
 export class Comment {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     id: string;
 
     @Column()

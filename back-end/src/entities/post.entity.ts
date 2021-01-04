@@ -1,7 +1,7 @@
 import {
   Entity,
   Column,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
@@ -11,7 +11,7 @@ import { PostInterface } from 'common/interfaces/index.interface';
 import { Comment } from './index';
 @Entity()
 export class Post {
-  @PrimaryColumn({ length: 12 })
+  @PrimaryGeneratedColumn()
   id: string;
 
   @Column()
