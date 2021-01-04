@@ -9,7 +9,6 @@ import {
 	Put,
 	Inject,
 	HttpStatus,
-	ParseUUIDPipe,
 	UseGuards,
 } from '@nestjs/common';
 import { PostDto } from 'common/dto/index.dto';
@@ -74,7 +73,7 @@ export class PostController {
 	@ApiOperation({ description: '获取文章详情' })
 	@Get(':id/comments')
 	async getPostDetail(
-		@Param('id', new ParseUUIDPipe()) id: string,
+		@Param('id') id: string,
 	): Promise<ResultInterface> {
 		let post = await this.postService.findOneById(id);
 		post = formatDate<PostEntity>(post, [
@@ -94,7 +93,7 @@ export class PostController {
 	@UseGuards(AuthGuard('jwt'))
 	@ApiBearerAuth()
 	@Delete(':id')
-	async deletePost(@Param('id', new ParseUUIDPipe()) id: string): Promise<ResultInterface> {
+	async deletePost(@Param('id') id: string): Promise<ResultInterface> {
 		await this.postService.deleteOneById(id);
 		return {
 			success: true,
@@ -109,7 +108,7 @@ export class PostController {
 	@Put(':id')
 	async updatePost(
 		@Body() updatePostDto: PostDto.UpdatePostDto,
-		@Param('id', new ParseUUIDPipe()) id: string,
+		@Param('id') id: string,
 	): Promise<ResultInterface> {
 		await this.postService.update(id, updatePostDto);
 		return {

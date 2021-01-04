@@ -4,7 +4,7 @@ import { Comment } from './index';
 import { IsDefined, IsEnum } from 'class-validator';
 @Entity()
 export class User {
-  @PrimaryColumn({ generated: 'uuid' })
+  @PrimaryColumn()
   id: string;
 
   @Column()

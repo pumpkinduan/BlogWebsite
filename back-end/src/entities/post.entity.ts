@@ -9,10 +9,9 @@ import {
 } from 'typeorm';
 import { PostInterface } from 'common/interfaces/index.interface';
 import { Comment } from './index';
-import { IsBoolean } from 'class-validator';
 @Entity()
 export class Post {
-  @PrimaryColumn({ generated: 'uuid' })
+  @PrimaryColumn()
   id: string;
 
   @Column()
@@ -57,8 +56,5 @@ export class Post {
   likes: number;
 
   @Column({ default: 0 })
-  visitors: number;
-
-  @Column({ default: 0 })
-  downloads: number;
+  browsers: number;
 }

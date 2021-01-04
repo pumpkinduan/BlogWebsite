@@ -5,7 +5,7 @@ import { Post } from './post.entity'
 type replyId = string;
 @Entity()
 export class Comment {
-    @PrimaryColumn({ generated: 'uuid' })
+    @PrimaryColumn()
     id: string;
 
     @Column()
