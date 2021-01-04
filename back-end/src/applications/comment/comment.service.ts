@@ -9,10 +9,12 @@ export class CommentService {
         @InjectRepository(Comment) readonly commentRepository: Repository<Comment>,
         @InjectRepository(Post) readonly PostRepository: Repository<Post>,
     ) { }
-    async create(createComment: CommentDto.CreateCommentDto): Promise<Comment> {
-        const children = createComment.replyId ? [createComment.replyId] : [];
+    async create(createComment: CommentDto.CreateCommentDto, userId: string): Promise<Comment> {
+        const children = createComment.parentId ? [createComment.parentId] : [];
         // 建立了外键关系时，save时必须传入实体
-        return await this.commentRepository.save(Object.assign(createComment, { children, post: { id: createComment.postId }, user: { id: createComment.userId } }));
+        const newComment = await this.commentRepository.save(Object.assign(createComment, { children: [], post: { id: createComment.postId }, user: { id: userId } }));
+
+        return newComment;
     }
 
     async deleteOneById(id: string): Promise<void> {

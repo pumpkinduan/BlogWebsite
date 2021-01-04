@@ -45,9 +45,9 @@ export class PostService {
             relations: ['comments', 'comments.user'],
         });
         post.comments.forEach(comment => {
+            Reflect.deleteProperty(comment.user, 'password');
             if (comment.user.type === USER_TYPE.NORMAL) {
                 // 普通用户
-                Reflect.deleteProperty(comment.user, 'password');
                 Reflect.deleteProperty(comment.user, 'profiles');
             }
             if (comment.user.type === USER_TYPE.ADMIN) {
@@ -56,6 +56,9 @@ export class PostService {
             }
         });
         return post;
+    }
+    async findPostComments(id: string) {
+        return await this.postRepository.findOne(id);
     }
     async deleteOneById(id: string): Promise<void> {
         await this.postRepository.delete(id);

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Inject, HttpStatus, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Inject, HttpStatus, Request, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { CommentDto } from "common/dto/index.dto";
 import { ResultInterface, SuccessMessage } from "common/interfaces/index.interface";
@@ -25,9 +25,12 @@ export class CommentController {
     }
 
     @ApiOperation({ description: '创建留言' })
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
     @Post('/create')
-    async createComment(@Body() createCommentDto: CommentDto.CreateCommentDto): Promise<ResultInterface> {
-        const comment = await this.commentRepository.create(createCommentDto)
+    async createComment(@Body() createCommentDto: CommentDto.CreateCommentDto, @Request() req): Promise<ResultInterface> {
+        console.log(req.user);
+        const comment = await this.commentRepository.create(createCommentDto, req.user.id)
         return {
             success: true,
             data: comment,
