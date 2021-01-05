@@ -2,8 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Post, Comment } from 'entities';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PostInterface, USER_TYPE } from 'common/interfaces/index.interface';
-import { formatDate } from 'utils/index.util';
+import { PostInterface } from 'common/interfaces/index.interface';
 @Injectable()
 export class PostService {
     constructor(
@@ -19,6 +18,9 @@ export class PostService {
         const posts = await this.postRepository.findAndCount({
             skip: offset,
             take: pageSize,
+            order: {
+                createdAt: 'DESC',
+            },
             select: [
                 'id',
                 'coverUrl',
@@ -26,15 +28,18 @@ export class PostService {
                 'title',
                 'browsers',
                 'likes',
-                'totalComments'
+                'totalComments',
             ],
-        })
-        const suspenses = await posts[0].map(async (post) => {
-            post.totalComments = await this.findPostTotalComments(post.id);
-            return post;
-        })
-        posts[0] = await Promise.all(suspenses);
+        });
         return posts;
+    }
+
+    // 获取文章详情
+    async findOneById(id: number): Promise<Post> {
+        const post = await this.postRepository.findOne(id);
+        const postComments = await this.findPostComments(id);
+        post.comments = postComments;
+        return post;
     }
 
     // 查询指定post下的留言总数
@@ -45,9 +50,78 @@ export class PostService {
             .getCount();
     }
 
+    // 获取指定文章下的留言
+    async findPostComments(
+        postId: number,
+        page = 1,
+        pageSize = 10,
+    ): Promise<Comment[]> {
+        const offset = page * pageSize - pageSize;
+        return await this.commentRepository
+            .createQueryBuilder('comment')
+            .select([
+                'comment.id',
+                'comment.content',
+                'comment.createdAt',
+                'reply.id',
+                'reply.content',
+                'reply.createdAt',
+                'sourceUser.id',
+                'sourceUser.username',
+                'reply_sourceUser.id',
+                'reply_sourceUser.username',
+                'reply_targetUser.id',
+                'reply_targetUser.username',
+            ])
+            .leftJoin('comment.sourceUser', 'sourceUser')
+            .leftJoin('comment.replies', 'reply')
+            .leftJoin('reply.sourceUser', 'reply_sourceUser')
+            .leftJoin('reply.targetUser', 'reply_targetUser')
+            .where('comment.postId = :id', { id: postId })
+            .take(pageSize)
+            .skip(offset)
+            .getMany();
+    }
+
+    // 获取文章的分类标签
+    async getCategories(): Promise<PostInterface.Category[]> {
+        return await this.postRepository
+            .createQueryBuilder('post')
+            .select('count("id")', 'counts')
+            .addSelect('post.category', 'category')
+            .groupBy('post.category')
+            .execute();
+    }
+
+    // 获取文章的归档
+    async getArchives() {
+        // await this.postRepository.findAndCount;
+    }
+
     async create(createPost: PostInterface.CreatePost): Promise<Post> {
         return await this.postRepository.save(createPost);
     }
+
+    /**
+     * 更新文章的点赞数
+     * @param payload 增量
+     */
+    async updatePostTotalLikes(postId: number, payload: { count: number }) {
+        await this.postRepository.update(postId, {
+            likes: () => `likes + ${payload.count}`,
+        });
+    }
+
+    /**
+     * 更新文章的浏览量
+     * @param payload 增量
+     */
+    async updatePostTotalBrowsers(postId: number, payload: { count: number }) {
+        await this.postRepository.update(postId, {
+            browsers: () => `browsers + ${payload.count}`,
+        });
+    }
+
     async update(
         id: number,
         updatePost: PostInterface.UpdatePost,
@@ -58,35 +132,6 @@ export class PostService {
         await this.postRepository.update(id, updatePost);
     }
 
-    // 获取文章详情
-    async findOneById(id: number): Promise<Post> {
-        const post = await this.postRepository.findOne(id, {
-            relations: ['comments'],
-        });
-        this.findPostTotalComments(id)
-        // post.comments.forEach(comment => {
-        //     // NOTE: 将UTC格式的时间进行转换
-        //     formatDate(comment, ['createdAt', 'deletedAt', 'updatedAt']);
-        //     Reflect.deleteProperty(comment.sourceUser, 'password');
-        //     if (comment.sourceUser.type === USER_TYPE.NORMAL) {
-        //         // 普通用户
-        //         Reflect.deleteProperty(comment.sourceUser, 'profiles');
-        //     }
-        //     if (comment.sourceUser.type === USER_TYPE.ADMIN) {
-        //         // 超级用户
-        //         Reflect.deleteProperty(comment.sourceUser, 'webUrl');
-        //     }
-        // });
-        return post;
-    }
-    async findPostComments(id: number) {
-        return await this.postRepository
-            .createQueryBuilder('post')
-            .select(['post.id', 'post.status', 'post.title', ''])
-            .where('post.id = :id', { id })
-            .getOne();
-        // return await this.postRepository.findOne(id);
-    }
     async deleteOneById(id: number): Promise<void> {
         await this.postRepository.delete(id);
     }

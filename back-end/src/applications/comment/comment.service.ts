@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentDto } from 'common/dto/index.dto';
-import { Comment, Post, User } from 'entities';
+import { Comment, Post, User, Reply } from 'entities';
 @Injectable()
 export class CommentService {
     constructor(
         @InjectRepository(Comment) readonly commentRepository: Repository<Comment>,
         @InjectRepository(Post) readonly postRepository: Repository<Post>,
         @InjectRepository(User) readonly userRepository: Repository<User>,
+        @InjectRepository(Reply) readonly replyRepository: Repository<Reply>,
     ) { }
 
     async create(createComment: CommentDto.CreateCommentDto): Promise<Comment> {
@@ -20,7 +21,9 @@ export class CommentService {
         );
         comment.sourceUser = sourceUser;
         comment.post = { id: createComment.postId };
-        return await this.commentRepository.save(comment);
+        const result = await this.commentRepository.save(comment);
+        await this.postRepository.update(createComment.postId, { totalComments: () => `totalComments + ${1}` })
+        return result;
     }
 
     async deleteOneById(id: number): Promise<void> {
@@ -28,28 +31,21 @@ export class CommentService {
     }
 
     // 获取指定留言下的回复列表
-    async findCommentRepliesById(id: number, pageSize = 10) {
-        return await this.commentRepository
-            .createQueryBuilder('comment')
+    async findCommentRepliesById(commentId: number, pageSize = 10) {
+        return await this.replyRepository
+            .createQueryBuilder('reply')
             .select([
-                'comment.id',
-                'comment.content',
-                'comment.createdAt',
                 'reply.id',
                 'reply.content',
                 'reply.createdAt',
                 'sourceUser.id',
                 'sourceUser.username',
-                'reply_sourceUser.id',
-                'reply_sourceUser.username',
-                'reply_targetUser.id',
-                'reply_targetUser.username'
+                'targetUser.id',
+                'targetUser.username',
             ])
-            .leftJoin('comment.sourceUser', 'sourceUser')
-            .leftJoin('comment.replies', 'reply')
-            .leftJoin('reply.sourceUser', 'reply_sourceUser')
-            .leftJoin('reply.targetUser', 'reply_targetUser')
-            .where('comment.id = :id', { id })
+            .leftJoin('reply.sourceUser', 'sourceUser')
+            .leftJoin('reply.targetUser', 'targetUser')
+            .where('reply.commentId = :id', { id: commentId })
             .take(pageSize)
             .getManyAndCount()
     }

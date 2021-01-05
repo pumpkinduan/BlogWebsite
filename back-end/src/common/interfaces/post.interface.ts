@@ -37,4 +37,6 @@ export namespace PostInterface {
         | 'coverUrl'
     >;
     export type UpdatePost = CreatePost;
+
+    export type Category = { category: string, counts: number }
 }

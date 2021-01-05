@@ -30,6 +30,9 @@ export class Post {
   @Column('simple-array', { nullable: false })
   tags: string[]; // 'js, ts, css'
 
+  @Column({ nullable: false })
+  category: string;
+
   @OneToMany(
     () => Comment,
     comment => comment.post,
@@ -51,9 +54,6 @@ export class Post {
 
   @UpdateDateColumn({ comment: '更新时间' })
   updatedAt?: string;
-
-  @DeleteDateColumn({ comment: '删除时间' })
-  deletedAt: string;
 
   @Column({ default: 0 })
   likes: number;

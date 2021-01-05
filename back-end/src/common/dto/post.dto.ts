@@ -1,6 +1,6 @@
 import { PostInterface } from 'common/interfaces/index.interface'
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDefined, IsOptional } from 'class-validator'
+import { IsDefined, IsNotEmpty, IsOptional } from 'class-validator'
 export namespace PostDto {
 	export class CreatePostDto implements PostInterface.CreatePost {
 		@ApiProperty({ description: '封面地址' })
@@ -30,6 +30,16 @@ export namespace PostDto {
 		@ApiProperty({ description: '标签' })
 		@IsDefined()
 		readonly tags: string[];
+
+		@ApiProperty({ description: '分类' })
+		@IsNotEmpty()
+		readonly category: string;
 	}
 	export class UpdatePostDto extends CreatePostDto { }
+
+	export class UpdateCountDto {
+		@ApiProperty({ description: '数量' })
+		@IsNotEmpty()
+		count: number;
+	}
 }

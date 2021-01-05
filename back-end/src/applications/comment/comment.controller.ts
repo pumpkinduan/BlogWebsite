@@ -11,8 +11,8 @@ export class CommentController {
         @Inject(CommentService) readonly commentService: CommentService,
     ) { }
     @ApiOperation({ description: '获取留言列表' })
-    @ApiQuery({ name: 'page', })
-    @ApiQuery({ name: 'pageSize' })
+    @ApiQuery({ name: 'page', example: 1 })
+    @ApiQuery({ name: 'pageSize', example: 10 })
     @Get()
     async getComments(@Query('page') page = 1, @Query('pageSize') pageSize = 10): Promise<ResultInterface> {
         const comments = await this.commentService.findAndCount(page, pageSize)

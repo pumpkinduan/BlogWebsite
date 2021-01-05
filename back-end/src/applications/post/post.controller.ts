@@ -17,9 +17,13 @@ import {
 	ResultInterface,
 	SuccessMessage,
 } from 'common/interfaces/index.interface';
-import { ApiBearerAuth, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+	ApiBearerAuth,
+	ApiOperation,
+	ApiQuery,
+	ApiTags,
+} from '@nestjs/swagger';
 import { PostService } from './post.service';
-import { formatDate } from 'utils/index.util';
 import { Post as PostEntity } from 'entities';
 import { AuthGuard } from '@nestjs/passport';
 @Controller('posts')
@@ -45,18 +49,13 @@ export class PostController {
 
 	@ApiOperation({ description: '获取文章列表' })
 	@Get()
-	@ApiQuery({ name: 'page', })
-	@ApiQuery({ name: 'pageSize' })
+	@ApiQuery({ name: 'page', example: 1 })
+	@ApiQuery({ name: 'pageSize', example: 10 })
 	async getPosts(
 		@Query('page') page = 1,
 		@Query('pageSize') pageSize = 10,
 	): Promise<ResultInterface> {
 		const posts = await this.postService.findAndCount(page, pageSize);
-		// posts[0] = formatDate<PostEntity>(posts[0], [
-		// 	'createdAt',
-		// 	'deletedAt',
-		// 	'updatedAt',
-		// ]) as PostEntity[];
 		return {
 			statusCode: HttpStatus.OK,
 			data: posts,
@@ -70,12 +69,7 @@ export class PostController {
 	async getPostDetail(
 		@Param('id', new ParseIntPipe()) id: number,
 	): Promise<ResultInterface> {
-		let post = await this.postService.findOneById(id);
-		post = formatDate<PostEntity>(post, [
-			'createdAt',
-			'deletedAt',
-			'updatedAt',
-		]) as PostEntity;
+		const post = await this.postService.findOneById(id);
 		return {
 			statusCode: HttpStatus.OK,
 			data: post,
@@ -83,20 +77,36 @@ export class PostController {
 			success: true,
 		};
 	}
-	@ApiOperation({ description: '获取指定文章的留言' })
+
+	@ApiOperation({ description: '获取文章分类' })
+	@Get('/categories')
+	async getCategories(): Promise<ResultInterface> {
+		const categories = await this.postService.getCategories();
+		return {
+			statusCode: HttpStatus.OK,
+			data: categories,
+			message: SuccessMessage.Post.OK,
+			success: true,
+		};
+	}
+
+	@ApiOperation({ description: '获取指定文章下的留言' })
+	@ApiQuery({ name: 'page', example: 1 })
+	@ApiQuery({ name: 'pageSize', example: 10 })
 	@Get(':id/comments')
 	async getPostComments(
 		@Param('id', new ParseIntPipe()) id: number,
+		@Query('page') page = 1,
+		@Query('pageSize') pageSize = 10,
 	): Promise<ResultInterface> {
-		let post = await this.postService.findPostComments(id);
-		post = formatDate<PostEntity>(post, [
-			'createdAt',
-			'deletedAt',
-			'updatedAt',
-		]) as PostEntity;
+		const postComments = await this.postService.findPostComments(
+			id,
+			page,
+			pageSize,
+		);
 		return {
 			statusCode: HttpStatus.OK,
-			data: post,
+			data: postComments,
 			message: SuccessMessage.Post.OK,
 			success: true,
 		};
@@ -106,7 +116,9 @@ export class PostController {
 	@UseGuards(AuthGuard('jwt'))
 	@ApiBearerAuth()
 	@Delete(':id')
-	async deletePost(@Param('id', new ParseIntPipe()) id: number): Promise<ResultInterface> {
+	async deletePost(
+		@Param('id', new ParseIntPipe()) id: number,
+	): Promise<ResultInterface> {
 		await this.postService.deleteOneById(id);
 		return {
 			success: true,
@@ -115,7 +127,39 @@ export class PostController {
 		};
 	}
 
-	@ApiOperation({ description: '更新文章' })
+	@ApiOperation({ description: '更新文章的点赞数' })
+	@UseGuards(AuthGuard('jwt'))
+	@ApiBearerAuth()
+	@Post(':id/liked')
+	async updatePostTotalLikes(
+		@Body() body: PostDto.UpdateCountDto,
+		@Param('id', new ParseIntPipe()) id: number,
+	): Promise<ResultInterface> {
+		await this.postService.updatePostTotalLikes(id, body);
+		return {
+			success: true,
+			statusCode: HttpStatus.OK,
+			message: SuccessMessage.Post.LIKE,
+		};
+	}
+
+	@ApiOperation({ description: '更新文章的浏览量' })
+	@UseGuards(AuthGuard('jwt'))
+	@ApiBearerAuth()
+	@Post(':id/browsered')
+	async updatePostTotalBrowsers(
+		@Body() body: PostDto.UpdateCountDto,
+		@Param('id', new ParseIntPipe()) id: number,
+	): Promise<ResultInterface> {
+		await this.postService.updatePostTotalBrowsers(id, body);
+		return {
+			success: true,
+			statusCode: HttpStatus.OK,
+			message: SuccessMessage.Post.LIKE,
+		};
+	}
+
+	@ApiOperation({ description: '更新文章信息' })
 	@UseGuards(AuthGuard('jwt'))
 	@ApiBearerAuth()
 	@Put(':id')

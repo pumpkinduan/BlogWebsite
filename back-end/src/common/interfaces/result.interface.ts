@@ -10,6 +10,7 @@ export namespace SuccessMessage {
         CREATE = '成功创建帖子',
         DELETE = '成功删除帖子',
         UPDATE = '成功更新帖子',
+        LIKE = '点赞成功',
         OK = 'OK'
     }
     export enum Comment {

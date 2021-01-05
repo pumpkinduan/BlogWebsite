@@ -20,7 +20,9 @@ import { ReplyModule } from './applications/reply/reply.module';
       password: "pumpkin108",
       database: "my_website",
       entities: [Comment, Post, User, Reply],
-      synchronize: true
+      synchronize: true,
+      logger: 'advanced-console',
+      logging: 'all'
     })
   })), PostModule, CommentModule, UserModule, AuthModule, PassportModule, ReplyModule],
   controllers: [AppController],
