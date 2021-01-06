@@ -31,8 +31,8 @@ import { AuthGuard } from '@nestjs/passport';
 export class PostController {
 	constructor(@Inject(PostService) private readonly postService: PostService) { }
 	@ApiOperation({ description: '创建文章' })
-	@UseGuards(AuthGuard('jwt'))
-	@ApiBearerAuth()
+	// @UseGuards(AuthGuard('jwt'))
+	// @ApiBearerAuth()
 	@Post('/create')
 	async createPost(
 		@Body()
@@ -85,6 +85,18 @@ export class PostController {
 		return {
 			statusCode: HttpStatus.OK,
 			data: categories,
+			message: SuccessMessage.Post.OK,
+			success: true,
+		};
+	}
+
+	@ApiOperation({ description: '获取文章归档' })
+	@Get('/archives')
+	async getArchives(): Promise<ResultInterface> {
+		const archives = await this.postService.getArchives();
+		return {
+			statusCode: HttpStatus.OK,
+			data: archives,
 			message: SuccessMessage.Post.OK,
 			success: true,
 		};

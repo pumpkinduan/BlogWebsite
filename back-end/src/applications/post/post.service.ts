@@ -85,21 +85,59 @@ export class PostService {
 
     // 获取文章的分类标签
     async getCategories(): Promise<PostInterface.Category[]> {
+        // sql: select category, COUNT(category) as count from post GROUP BY category;
         return await this.postRepository
             .createQueryBuilder('post')
-            .select('count("id")', 'counts')
+            .select('count(category) AS count')
             .addSelect('post.category', 'category')
-            .groupBy('post.category')
+            .groupBy('category')
             .execute();
     }
 
     // 获取文章的归档
-    async getArchives() {
-        // await this.postRepository.findAndCount;
+    async getArchives(): Promise<PostInterface.Archive[]> {
+        const archives: Record<'dates' | 'ids' | 'count' | 'titles', string>[] = await this.postRepository
+            .createQueryBuilder('post')
+            .select('DATE_FORMAT(createdAt, "%Y,%c") AS dates')
+            .addSelect('COUNT(*) AS count')
+            .addSelect('GROUP_CONCAT(post.id) AS ids')
+            .addSelect('GROUP_CONCAT(post.title) AS titles')
+            .orderBy('post.createdAt', 'DESC')
+            .groupBy('dates')
+            .execute();
+
+        const dataSource = [];
+        archives.map((archive) => {
+            const dates = archive.dates.split(',');
+            const ids = archive.ids.split(',')
+            const titles = archive.titles.split(',');
+            const list = { month: +dates[1], items: [], count: +archive.count }
+            const result: any = { fullyear: +dates[0], list: list };
+            for (let i = 0; i < list.count; i++) {
+                list.items.push({ id: +ids[i], title: titles[i] })
+            }
+            return result;
+        }).forEach((archive) => {
+            const temp = dataSource.find((data) => data.fullyear === archive.fullyear);
+            if (temp) {
+                temp.lists.push(archive.list);
+                return;
+            }
+            dataSource.push({
+                fullyear: archive.fullyear,
+                lists: [archive.list]
+            })
+        })
+        return dataSource;
     }
 
     async create(createPost: PostInterface.CreatePost): Promise<Post> {
-        return await this.postRepository.save(createPost);
+        const date = new Date();
+        return await this.postRepository.save({
+            ...createPost,
+            fullyear: date.getFullYear(),
+            month: date.getMonth() + 1,
+        });
     }
 
     /**
