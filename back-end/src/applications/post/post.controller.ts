@@ -125,8 +125,8 @@ export class PostController {
 	}
 
 	@ApiOperation({ description: '删除文章' })
-	@UseGuards(AuthGuard('jwt'))
-	@ApiBearerAuth()
+	// @UseGuards(AuthGuard('jwt'))
+	// @ApiBearerAuth()
 	@Delete(':id')
 	async deletePost(
 		@Param('id', new ParseIntPipe()) id: number,

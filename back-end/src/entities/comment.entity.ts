@@ -13,12 +13,12 @@ export class Comment {
     @CreateDateColumn({ comment: '创建时间' })
     createdAt: string;
 
-    @ManyToOne(() => User, user => user.comments, { cascade: true })
+    @ManyToOne(() => User, user => user.comments, { cascade: true, onDelete: 'CASCADE' })
     sourceUser: Omit<User, 'password' | 'replies' | 'comments'>; // 留言关联的用户，与用户为多对一关系
 
     @OneToMany(() => Reply, reply => reply.comment)
     replies: Reply[]// 回复  
 
-    @ManyToOne(() => Post, post => post.comments, { cascade: true })
+    @ManyToOne(() => Post, post => post.comments, { cascade: true, onDelete: 'CASCADE' })
     post: Pick<Post, 'id'>;
 }   

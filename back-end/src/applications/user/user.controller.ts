@@ -68,8 +68,8 @@ export class UserController {
     }
 
     @ApiOperation({ description: '删除用户' })
-    @UseGuards(AuthGuard('jwt'))
-    @ApiBearerAuth()
+    // @UseGuards(AuthGuard('jwt'))
+    // @ApiBearerAuth()
     @Delete(':id')
     async deleteUser(@Param('id') id: string): Promise<ResultInterface> {
         await this.userRepository.deleteById(id);

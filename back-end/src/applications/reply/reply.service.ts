@@ -36,7 +36,7 @@ export class ReplyService {
 		return await this.replyRepository.save(reply);
 	}
 
-	async delete(id: number) {
+	async deleteOneById(id: number) {
 		await this.replyRepository.delete(id);
 	}
 

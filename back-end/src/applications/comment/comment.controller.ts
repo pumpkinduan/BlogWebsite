@@ -39,8 +39,8 @@ export class CommentController {
     }
 
     @ApiOperation({ description: '删除留言' })
-    @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
+    // @ApiBearerAuth()
+    // @UseGuards(AuthGuard('jwt'))
     @Delete(':id')
     async deleteComment(@Param('id', new ParseIntPipe()) id: number): Promise<ResultInterface> {
         await this.commentService.deleteOneById(id);
