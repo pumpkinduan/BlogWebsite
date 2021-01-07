@@ -10,6 +10,7 @@ import { LoggerMiddleware } from 'middlewares/logger.middleware';
 import { PassportModule } from '@nestjs/passport'
 import { AuthModule } from './applications/auth/auth.module';
 import { ReplyModule } from './applications/reply/reply.module';
+import { PhotoModule } from './applications/photo/photo.module';
 @Module({
   imports: [TypeOrmModule.forRootAsync(({
     useFactory: () => ({
@@ -24,7 +25,7 @@ import { ReplyModule } from './applications/reply/reply.module';
       logger: 'advanced-console',
       logging: 'all'
     })
-  })), PostModule, CommentModule, UserModule, AuthModule, PassportModule, ReplyModule],
+  })), PostModule, CommentModule, UserModule, AuthModule, PassportModule, ReplyModule, PhotoModule],
   controllers: [AppController],
   providers: [AppService],
 })

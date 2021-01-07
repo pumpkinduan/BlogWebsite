@@ -5,7 +5,6 @@ import {
   OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
-  DeleteDateColumn,
 } from 'typeorm';
 import { PostInterface } from 'common/interfaces/index.interface';
 import { Comment } from './index';
