@@ -5,7 +5,7 @@ import { PostModule } from 'applications/post/post.module';
 import { CommentModule } from 'applications/comment/comment.module';
 import { UserModule } from 'applications/user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Comment, User, Post, Reply } from 'entities'
+import { Comment, User, Post, Reply, Photo } from 'entities'
 import { LoggerMiddleware } from 'middlewares/logger.middleware';
 import { PassportModule } from '@nestjs/passport'
 import { AuthModule } from './applications/auth/auth.module';
@@ -20,7 +20,7 @@ import { PhotoModule } from './applications/photo/photo.module';
       username: "root",
       password: "pumpkin108",
       database: "my_website",
-      entities: [Comment, Post, User, Reply],
+      entities: [Comment, Post, User, Reply, Photo],
       synchronize: true,
       logger: 'advanced-console',
       logging: 'all'
