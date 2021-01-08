@@ -9,7 +9,7 @@ export class Photo {
     @CreateDateColumn()
     createdAt: string;
 
-    @Column({ comment: '图片类型', default: PhotoDto.PHOTO_TYPE.WALL })
+    @Column({ comment: '图片类型' })
     type: PhotoDto.PHOTO_TYPE;
 
     @Column({ nullable: false, comment: '媒体类型' })

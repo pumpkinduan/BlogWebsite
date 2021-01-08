@@ -26,6 +26,11 @@ export namespace SuccessMessage {
         DELETE = '成功删除用户',
         OK = 'OK'
     }
+    export enum Photo {
+        CREATE = '成功创建图片',
+        DELETE = '成功删除图片',
+        OK = 'OK'
+    }
 }
 
 export namespace FailedMessage {
