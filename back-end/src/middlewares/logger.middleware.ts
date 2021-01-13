@@ -18,6 +18,9 @@ export class LoggerMiddleware implements NestMiddleware {
             params: req.params
         }
         const file_prefix_name = createLoggerPrefix(req.originalUrl);
+        console.log('requestLog');
+        console.log(requestLog);
+
         // 将posts帖子相关的请求 写入logger.txt文件中
         fs.appendFile(`src/logger/${file_prefix_name}_logger.txt`, JSON.stringify(requestLog) + '\r\n', (err) => {
             if (err) throw err;
