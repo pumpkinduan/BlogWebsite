@@ -4,13 +4,13 @@ import { JwtModule } from '@nestjs/jwt'
 import { UserModule } from 'applications/user/user.module'
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy'
-import { jwtConstants } from './constants'
+import { JWT } from 'src/consts'
 import { CryptoUtil } from 'utils/crypto';
 
 @Module({
   imports: [UserModule, PassportModule, JwtModule.register({
-    secret: jwtConstants.secret,
-    signOptions: { expiresIn: jwtConstants.expiresIn }
+    secret: JWT.secret,
+    signOptions: { expiresIn: JWT.expiresIn }
   })],
   providers: [AuthService, JwtStrategy, CryptoUtil],
   exports: [AuthService]

@@ -21,6 +21,8 @@ import { Photo } from 'entities';
 import { PhotoService } from './photo.service';
 import * as fs from 'fs';
 import { PhotoDto } from 'common/dto/index.dto';
+import { FILE_LIMIT } from 'src/consts';
+
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -46,10 +48,14 @@ export class PhotoController {
 
     @Post('upload')
     @ApiOperation({ description: '表单字段名为：file' })
-    @UseInterceptors(FileInterceptor('file', { storage }))
+    @UseInterceptors(FileInterceptor('file', {
+        storage, limits: {
+            fileSize: FILE_LIMIT.filesize
+        }
+    }))
     async uploadPhoto(
         @UploadedFile() file,
-        @Body() body,
+        @Body() body: PhotoDto.CreatePhotoDto,
     ): Promise<ResultInterface> {
         const photoProfiles: Omit<Photo, 'id' | 'createdAt'> = {
             mimetype: file.mimetype,
