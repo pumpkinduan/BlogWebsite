@@ -1,5 +1,6 @@
-import { Controller, Inject, Post, Body, Param, Delete } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, Inject, Post, Body, Param, Delete, Request, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { ReplyDto } from 'common/dto/reply.dto';
 import { ResultInterface } from 'common/interfaces/index.interface';
 import { ReplyService } from './reply.service';
@@ -10,11 +11,12 @@ export class ReplyController {
     constructor(
         @Inject(ReplyService) readonly replyService: ReplyService,
     ) { }
-
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
     @ApiOperation({ description: '创建回复' })
     @Post('/create')
-    async createReply(@Body() createReplyDto: ReplyDto.CreateReplyDto): Promise<ResultInterface> {
-        const reply = await this.replyService.create(createReplyDto);
+    async createReply(@Body() createReplyDto: ReplyDto.CreateReplyDto, @Request() req): Promise<ResultInterface> {
+        const reply = await this.replyService.create({ ...createReplyDto, sourceUserId: req.user.id });
         return {
             statusCode: 200,
             success: true,

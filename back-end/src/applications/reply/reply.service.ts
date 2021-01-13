@@ -12,27 +12,20 @@ export class ReplyService {
 		@InjectRepository(Comment) readonly commentRepository: Repository<Comment>,
 	) { }
 
-	async create(createReplyDto: ReplyDto.CreateReplyDto): Promise<Reply> {
-		console.log(createReplyDto);
-
+	async create(createReplyDto: ReplyDto.CreateReplyDto & { sourceUserId: number }): Promise<Reply> {
 		const reply = this.replyRepository.create(createReplyDto);
-		// const parentComment = await this.commentRepository.findOne(
-		// 	createReplyDto.commentId,
-		// );
 		const parentComment = { id: createReplyDto.commentId }
 		const sourceUser = await this.userRepository.findOne(
 			createReplyDto.sourceUserId,
-			{ select: ['email', 'id', 'username', 'type', 'webUrl'] },
+			{ select: ['id', 'username'] },
 		);
 		const targetUser = await this.userRepository.findOne(
 			createReplyDto.targetUserId,
-			{ select: ['email', 'id', 'username', 'type', 'webUrl'] },
+			{ select: ['id', 'username'] },
 		);
 		reply.comment = parentComment;
 		reply.sourceUser = sourceUser;
 		reply.targetUser = targetUser;
-		console.log(reply);
-
 		return await this.replyRepository.save(reply);
 	}
 

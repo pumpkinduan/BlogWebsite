@@ -17,7 +17,7 @@ export namespace PostDto {
 
 		@IsOptional()
 		@ApiProperty({ description: '作者' })
-		readonly author?: string;
+		readonly author: string;
 
 		@ApiProperty({ description: '内容，html字符串格式' })
 		@IsDefined()

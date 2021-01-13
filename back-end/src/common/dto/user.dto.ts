@@ -8,7 +8,7 @@ export namespace UserDto {
     export class CreateUserDto {
         @IsDefined()
         @IsEmail()
-        @ApiProperty({ description: '邮箱' })
+        @ApiProperty({ description: '邮箱', example: '123@qq.com' })
         readonly email: string;
 
         @IsDefined()
@@ -28,16 +28,16 @@ export namespace UserDto {
         readonly webUrl?: string;
 
         @IsDefined()
-        @ApiProperty({ description: '登录密码' })
+        @ApiProperty({ description: '登录密码', example: '123@qq.com' })
         password: string;
     }
     export class LoginDto {
         @IsEmail()
-        @ApiProperty({ description: '邮箱' })
+        @ApiProperty({ description: '邮箱', example: '123@qq.com' })
         readonly email: string;
 
         @IsDefined()
-        @ApiProperty({ description: '登录密码' })
+        @ApiProperty({ description: '登录密码', example: '123@qq.com' })
         password: string;
     }
     export class UpdateAdminProfilesDto implements UserInterface.AdminProfiles {

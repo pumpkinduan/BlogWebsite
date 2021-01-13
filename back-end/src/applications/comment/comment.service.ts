@@ -12,16 +12,17 @@ export class CommentService {
         @InjectRepository(Reply) readonly replyRepository: Repository<Reply>,
     ) { }
 
-    async create(createComment: CommentDto.CreateCommentDto): Promise<Comment> {
+    async create(createComment: CommentDto.CreateCommentDto & { sourceUserId: number }): Promise<Comment> {
         // 建立了外键关系时，save时必须传入实体
         const comment = this.commentRepository.create(createComment);
         const sourceUser = await this.userRepository.findOne(
             createComment.sourceUserId,
-            { select: ['email', 'id', 'profiles', 'username', 'type', 'webUrl'] },
+            { select: ['id', 'username'] },
         );
         comment.sourceUser = sourceUser;
         comment.post = { id: createComment.postId };
         const result = await this.commentRepository.save(comment);
+        // 留言总数 +1
         await this.postRepository.update(createComment.postId, { totalComments: () => `totalComments + ${1}` })
         return result;
     }

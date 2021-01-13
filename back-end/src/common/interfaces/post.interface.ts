@@ -1,7 +1,7 @@
 import { CommentInterface } from 'common/interfaces/index.interface'
-type basicPostString = Record<'coverUrl' | 'title' | 'createdAt' | 'id', string>;
+type basicPostString = Record<'coverUrl' | 'title' | 'createdAt' | 'id' | 'category' | 'description' | 'author', string>;
 type basicPostNumber = Record<
-    'likes' | 'visitors' | 'downloads',
+    'likes' | 'totalComments' | 'browsers',
     number
 >;
 // 可用于前后端 
@@ -21,9 +21,7 @@ export namespace PostInterface {
     }
     // 文章详情
     export interface DetailPost extends BasicPost {
-        author?: string;
         content: string;
-        description: string;
         comments: CommentInterface.BasicComment[]; // 一篇文章下关联的留言，与留言为一对多关系
     }
     export type CreatePost = Pick<

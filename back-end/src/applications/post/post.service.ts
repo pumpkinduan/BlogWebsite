@@ -24,7 +24,10 @@ export class PostService {
             select: [
                 'id',
                 'coverUrl',
+                'createdAt',
+                'author',
                 'description',
+                'category',
                 'title',
                 'browsers',
                 'likes',

@@ -6,9 +6,9 @@ export namespace ReplyDto {
         @ApiProperty({ description: '回复内容' })
         readonly content: string;
 
-        @IsDefined()
-        @ApiProperty({ description: '评论人id' })
-        readonly sourceUserId: number;
+        // @IsDefined()
+        // @ApiProperty({ description: '评论人id' })
+        // readonly sourceUserId: number;
 
         @IsOptional()
         @ApiProperty({ description: '父级留言id', nullable: true, required: false })
