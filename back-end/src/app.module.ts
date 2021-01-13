@@ -23,7 +23,7 @@ import { PhotoModule } from './applications/photo/photo.module';
       entities: [Comment, Post, User, Reply, Photo],
       synchronize: true,
       logger: 'advanced-console',
-      logging: 'all'
+      // logging: 'all'
     })
   })), PostModule, CommentModule, UserModule, AuthModule, PassportModule, ReplyModule, PhotoModule],
   controllers: [AppController],
