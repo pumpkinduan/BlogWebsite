@@ -16,7 +16,7 @@ export class PhotoService {
     async findAndCount(type: PhotoDto.PHOTO_TYPE, page = 1, pageSize = 10) {
         const offset = page * pageSize - pageSize;
 
-        const photos = await this.photoRepository.findAndCount({
+        const photos = await this.photoRepository.find({
             where: {
                 type: type
             },
@@ -28,7 +28,7 @@ export class PhotoService {
             take: pageSize
         })
 
-        photos[0].forEach((photo) => {
+        photos.forEach((photo) => {
             photo.path = photo.path.replace(/\\/gi, '/');
         })
         return photos;

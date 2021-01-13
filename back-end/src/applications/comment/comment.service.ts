@@ -55,7 +55,7 @@ export class CommentService {
     async findAndCount(
         page: number,
         pageSize: number,
-    ): Promise<[Comment[], number]> {
+    ): Promise<Comment[]> {
         // 分页
         const offset = page * pageSize - pageSize;
         return await this.commentRepository
@@ -80,6 +80,6 @@ export class CommentService {
             .leftJoin('reply.targetUser', 'reply_targetUser')
             .take(pageSize)
             .skip(offset)
-            .getManyAndCount()
+            .getMany()
     }
 }

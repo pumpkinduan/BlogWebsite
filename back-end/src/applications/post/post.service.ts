@@ -12,10 +12,10 @@ export class PostService {
     async findAndCount(
         page: number,
         pageSize: number,
-    ): Promise<[Post[], number]> {
+    ): Promise<Post[]> {
         // 分页
         const offset = page * pageSize - pageSize;
-        const posts = await this.postRepository.findAndCount({
+        const posts = await this.postRepository.find({
             skip: offset,
             take: pageSize,
             order: {
