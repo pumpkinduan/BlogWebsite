@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Query, Get, HttpStatus, Param, Post, Inject, Put, UseGuards, Request } from '@nestjs/common';
 import { UserDto } from "common/dto/index.dto";
-import { ResultInterface, SuccessMessage, USER_TYPE } from 'common/interfaces/index.interface'
+import { ResultInterface, SuccessMessage, USER_TYPE } from 'common/interfaces/index.interface';
 import { ApiOperation, ApiTags, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
-import { UserService } from './user.service'
+import { UserService } from './user.service';
 import { AuthGuard } from '@nestjs/passport';
 @Controller('users')
 @ApiTags('用户群')
@@ -55,6 +55,7 @@ export class UserController {
         }
     }
 
+
     @ApiOperation({ description: '更新管理员信息' })
     @ApiBearerAuth()
     @UseGuards(AuthGuard('jwt'))
@@ -73,7 +74,7 @@ export class UserController {
     @UseGuards(AuthGuard('jwt'))
     @ApiBearerAuth()
     @Delete(':id')
-    async deleteUser(@Param('id') id: string): Promise<ResultInterface> {
+    async deleteUser(@Param('id') id: number): Promise<ResultInterface> {
         await this.userRepository.deleteById(id);
         return {
             success: true,

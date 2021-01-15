@@ -1,16 +1,24 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PhotoDto } from 'common/dto/index.dto';
 import { Photo } from 'entities';
 import { unlink } from 'fs';
 import { Repository } from 'typeorm';
-
+import { UserService } from '..//user/user.service';
 @Injectable()
 export class PhotoService {
-    constructor(@InjectRepository(Photo) readonly photoRepository: Repository<Photo>) { }
+    constructor(
+        @InjectRepository(Photo) readonly photoRepository: Repository<Photo>,
+        @Inject(UserService) readonly userService: UserService,
+    ) { }
 
-    async upload(createPhotoDto: PhotoDto.CreatePhotoDto) {
-        return await this.photoRepository.save(createPhotoDto);
+    async upload(photoProfiles: Omit<Photo, 'id' | 'createdAt'>, createPhotoDto: PhotoDto.CreatePhotoDto) {
+        const result = await this.photoRepository.save(photoProfiles);
+        if (createPhotoDto.type === PhotoDto.PHOTO_TYPE.AVATAR) {
+            // 上传的是头像，则需要更新指定用户的avatar
+            this.userService.updateUserInfo(createPhotoDto.userId, { avatar: result.path })
+        }
+        return result;
     }
 
     async findAndCount(type: PhotoDto.PHOTO_TYPE, page = 1, pageSize = 10) {

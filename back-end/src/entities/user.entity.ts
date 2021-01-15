@@ -12,6 +12,9 @@ export class User {
 	@Column({ nullable: false })
 	email: string;
 
+	@Column({ default: '' })
+	avatar: string;
+
 	@Column({ nullable: false })
 	type: USER_TYPE;
 

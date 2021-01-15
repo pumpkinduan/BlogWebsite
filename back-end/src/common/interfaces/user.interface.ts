@@ -11,16 +11,17 @@ export namespace UserInterface {
     id: string;
     type: USER_TYPE.NORMAL;
     webUrl: string;
+    avatar?: string;
   }
   export interface AdminProfiles {
     nickname: string;
     github: string;
     brief: string;
     notice?: string;
-    avatar?: string;
   }
   export interface ADMIN extends Record<'username' | 'email', string> {
     type: USER_TYPE.ADMIN;
+    avatar: string;
     profiles?: AdminProfiles;
     moment_ids?: postId[]; // 文章id
     word_ids?: userId[]; // 给我的留言id

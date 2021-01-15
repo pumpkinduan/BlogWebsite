@@ -6,9 +6,9 @@ import { User } from 'entities'
 import { USER_TYPE } from 'common/interfaces/index.interface';
 @Injectable()
 export class UserService {
-    constructor(@InjectRepository(User) readonly userRepository: Repository<User>) {
-
-    }
+    constructor(
+        @InjectRepository(User) readonly userRepository: Repository<User>
+    ) { }
 
     /**
      * 创建用户
@@ -38,15 +38,25 @@ export class UserService {
      * 通过id 查询用户
      * @param id 用户id
      */
-    async findOneById(id: string): Promise<User> {
+    async findOneById(id: number): Promise<User> {
         return await this.userRepository.findOne(id, { select: ['email', 'id', 'profiles', 'type', 'username', 'webUrl'] });
+    }
+
+    /**
+     * @param id 用户id
+     * @param updateUserInfoDto 用户的基础信息
+     */
+    async updateUserInfo(id: number, updateUserInfoDto: UserDto.UpdateUserInfoDto): Promise<void> {
+        const existing_user = await this.userRepository.findOne(id);
+        if (!existing_user) throw new NotFoundException(`保存信息失败，ID 为${id}的用户不存在`);
+        await this.userRepository.update(id, updateUserInfoDto);
     }
 
     /**
      * @param id 管理员id
      * @param updateProfileDto 管理员的基础信息
      */
-    async updateAdminProfiles(id: string, updateProfileDto: UserDto.UpdateAdminProfilesDto): Promise<void> {
+    async updateAdminProfiles(id: number, updateProfileDto: UserDto.UpdateAdminProfilesDto): Promise<void> {
         const existing_admin = await this.userRepository.findOne(id);
         if (!existing_admin) throw new NotFoundException(`保存信息失败，ID 为${id}的管理员不存在`);
         await this.userRepository.update(id, { profiles: updateProfileDto });
@@ -56,7 +66,7 @@ export class UserService {
      * 通过id 删除用户
      * @param id 用户id
      */
-    async deleteById(id: string): Promise<void> {
+    async deleteById(id: number): Promise<void> {
         await this.userRepository.delete(id);
     }
     /**

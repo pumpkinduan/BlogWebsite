@@ -40,6 +40,19 @@ export namespace UserDto {
         @ApiProperty({ description: '登录密码', example: '123@qq.com' })
         password: string;
     }
+    export class UpdateUserInfoDto {
+        @IsOptional()
+        @ApiProperty({ description: '用户昵称', required: false })
+        readonly username?: string;
+
+        @IsOptional()
+        @ApiProperty({ description: '博客地址', required: false })
+        readonly webUrl?: string;
+
+        @IsOptional()
+        @ApiProperty({ description: '头像', required: false })
+        readonly avatar?: string;
+    }
     export class UpdateAdminProfilesDto implements UserInterface.AdminProfiles {
         @IsDefined()
         @ApiProperty({ description: 'github地址', default: 'https://github.com/pumpkinduan', enum: ['https://github.com/pumpkinduan'] })
@@ -56,9 +69,5 @@ export namespace UserDto {
         @IsOptional()
         @ApiProperty({ required: false, description: '公告', default: '个人博客网站2.0即将发布，期待ing......', enum: ['个人博客网站2.0即将发布，期待ing......'] })
         notice: string;
-
-        @IsOptional()
-        @ApiProperty({ description: '头像', required: false })
-        avatar: string;
     }
 }

@@ -66,7 +66,7 @@ export class PhotoController {
             destination: file.destination,
             type: body.type,
         };
-        const createdPhoto = await this.photoService.upload(photoProfiles);
+        const createdPhoto = await this.photoService.upload(photoProfiles, body);
         return {
             statusCode: 200,
             success: true,
