@@ -80,9 +80,9 @@ export class PhotoController {
 
     @ApiOperation({ description: '根据type获取图片' })
     @ApiQuery({
-        description: '0:文章的图片, 1:相册墙',
+        description: '文章的图片, 相册墙, 头像',
         name: 'type',
-        enum: [PhotoDto.PHOTO_TYPE.POST, PhotoDto.PHOTO_TYPE.WALL],
+        enum: PhotoDto.PHOTO_TYPE,
         example: PhotoDto.PHOTO_TYPE.WALL,
     })
     @ApiQuery({ name: 'page', example: 1 })
