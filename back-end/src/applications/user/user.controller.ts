@@ -56,9 +56,11 @@ export class UserController {
     }
 
     @ApiOperation({ description: '更新管理员信息' })
-    @Put('admin/:id')
-    async updateAdminProfiles(@Param('id') id: string, @Body() updateAdminProfilesDto: UserDto.UpdateAdminProfilesDto): Promise<ResultInterface> {
-        await this.userRepository.updateAdminProfiles(id, updateAdminProfilesDto);
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    @Put('admin')
+    async updateAdminProfiles(@Body() updateAdminProfilesDto: UserDto.UpdateAdminProfilesDto, @Request() req): Promise<ResultInterface> {
+        await this.userRepository.updateAdminProfiles(req.user.id, updateAdminProfilesDto);
         return {
             success: true,
             statusCode: 200,
@@ -68,8 +70,8 @@ export class UserController {
     }
 
     @ApiOperation({ description: '删除用户' })
-    // @UseGuards(AuthGuard('jwt'))
-    // @ApiBearerAuth()
+    @UseGuards(AuthGuard('jwt'))
+    @ApiBearerAuth()
     @Delete(':id')
     async deleteUser(@Param('id') id: string): Promise<ResultInterface> {
         await this.userRepository.deleteById(id);
