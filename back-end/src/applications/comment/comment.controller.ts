@@ -3,7 +3,8 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger'
 import { CommentDto } from "common/dto/index.dto";
 import { ResultInterface, SuccessMessage } from "common/interfaces/index.interface";
 import { CommentService } from './comment.service'
-import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/guards/index.guard'
+
 @Controller('comments')
 @ApiTags('留言')
 export class CommentController {
@@ -26,7 +27,7 @@ export class CommentController {
 
     @ApiOperation({ description: '创建留言' })
     @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(new JwtAuthGuard())
     @Post('/create')
     async createComment(@Body() createCommentDto: CommentDto.CreateCommentDto, @Request() req): Promise<ResultInterface> {
         const comment = await this.commentService.create({ ...createCommentDto, sourceUserId: req.user.id })
@@ -39,8 +40,8 @@ export class CommentController {
     }
 
     @ApiOperation({ description: '删除留言' })
-    // @ApiBearerAuth()
-    // @UseGuards(AuthGuard('jwt'))
+    @ApiBearerAuth()
+    @UseGuards(new JwtAuthGuard())
     @Delete(':id')
     async deleteComment(@Param('id', new ParseIntPipe()) id: number): Promise<ResultInterface> {
         await this.commentService.deleteOneById(id);

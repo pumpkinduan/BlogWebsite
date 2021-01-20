@@ -10,9 +10,10 @@ import {
     Param,
     Get,
     Query,
+    UseGuards
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiOperation, ApiTags, ApiQuery } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import {
     ResultInterface,
     SuccessMessage,
@@ -22,6 +23,8 @@ import { PhotoService } from './photo.service';
 import * as fs from 'fs';
 import { PhotoDto } from 'common/dto/index.dto';
 import { FILE_LIMIT } from 'src/consts';
+import { JwtAuthGuard } from 'src/guards/index.guard'
+
 
 const multer = require('multer');
 const storage = multer.diskStorage({
@@ -43,6 +46,8 @@ const storage = multer.diskStorage({
 });
 @Controller('photo')
 @ApiTags('图片')
+@ApiBearerAuth()
+@UseGuards(new JwtAuthGuard())
 export class PhotoController {
     constructor(@Inject(PhotoService) readonly photoService: PhotoService) { }
 
@@ -103,8 +108,6 @@ export class PhotoController {
     }
 
     @ApiOperation({ description: '删除指定图片' })
-    // @ApiBearerAuth()
-    // @UseGuards(AuthGuard('jwt'))
     @Delete(':id')
     async deletePhoto(
         @Param('id', new ParseIntPipe()) id: number,

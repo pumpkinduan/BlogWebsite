@@ -25,14 +25,14 @@ import {
 } from '@nestjs/swagger';
 import { PostService } from './post.service';
 import { Post as PostEntity } from 'entities';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/guards/index.guard'
 @Controller('posts')
 @ApiTags('文章')
 export class PostController {
 	constructor(@Inject(PostService) private readonly postService: PostService) { }
 	@ApiOperation({ description: '创建文章' })
-	// @UseGuards(AuthGuard('jwt'))
-	// @ApiBearerAuth()
+	@UseGuards(new JwtAuthGuard())
+	@ApiBearerAuth()
 	@Post('/create')
 	async createPost(
 		@Body()
@@ -125,8 +125,8 @@ export class PostController {
 	}
 
 	@ApiOperation({ description: '删除文章' })
-	// @UseGuards(AuthGuard('jwt'))
-	// @ApiBearerAuth()
+	@ApiBearerAuth()
+	@UseGuards(new JwtAuthGuard())
 	@Delete(':id')
 	async deletePost(
 		@Param('id', new ParseIntPipe()) id: number,
@@ -140,8 +140,6 @@ export class PostController {
 	}
 
 	@ApiOperation({ description: '更新文章的点赞数' })
-	@UseGuards(AuthGuard('jwt'))
-	@ApiBearerAuth()
 	@Post(':id/liked')
 	async updatePostTotalLikes(
 		@Body() body: PostDto.UpdateCountDto,
@@ -156,8 +154,6 @@ export class PostController {
 	}
 
 	@ApiOperation({ description: '更新文章的浏览量' })
-	@UseGuards(AuthGuard('jwt'))
-	@ApiBearerAuth()
 	@Post(':id/browsered')
 	async updatePostTotalBrowsers(
 		@Body() body: PostDto.UpdateCountDto,
@@ -172,7 +168,7 @@ export class PostController {
 	}
 
 	@ApiOperation({ description: '更新文章信息' })
-	@UseGuards(AuthGuard('jwt'))
+	@UseGuards(new JwtAuthGuard())
 	@ApiBearerAuth()
 	@Put(':id')
 	async updatePost(

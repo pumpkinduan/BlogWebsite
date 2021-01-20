@@ -1,18 +1,18 @@
 import { Controller, Inject, Post, Body, Param, Delete, Request, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { ApiOperation, ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { ReplyDto } from 'common/dto/reply.dto';
 import { ResultInterface } from 'common/interfaces/index.interface';
 import { ReplyService } from './reply.service';
+import { JwtAuthGuard } from 'src/guards/index.guard'
 
 @Controller('reply')
 @ApiTags('回复')
+@ApiBearerAuth()
+@UseGuards(new JwtAuthGuard())
 export class ReplyController {
     constructor(
         @Inject(ReplyService) readonly replyService: ReplyService,
     ) { }
-    @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
     @ApiOperation({ description: '创建回复' })
     @Post('/create')
     async createReply(@Body() createReplyDto: ReplyDto.CreateReplyDto, @Request() req): Promise<ResultInterface> {

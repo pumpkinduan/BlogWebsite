@@ -3,7 +3,7 @@ import { UserDto } from "common/dto/index.dto";
 import { ResultInterface, SuccessMessage, USER_TYPE } from 'common/interfaces/index.interface';
 import { ApiOperation, ApiTags, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { UserService } from './user.service';
-import { AuthGuard } from '@nestjs/passport';
+import { JwtAuthGuard } from 'src/guards/index.guard'
 @Controller('users')
 @ApiTags('用户群')
 export class UserController {
@@ -30,9 +30,9 @@ export class UserController {
     }
 
     @ApiOperation({ description: '获取指定用户信息' })
-    @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
     @Get('/profile')
+    @ApiBearerAuth()
+    @UseGuards(new JwtAuthGuard())
     async getUserProfile(
         @Request() req
     ): Promise<ResultInterface> {
@@ -57,9 +57,9 @@ export class UserController {
 
 
     @ApiOperation({ description: '更新管理员信息' })
-    @ApiBearerAuth()
-    @UseGuards(AuthGuard('jwt'))
     @Put('admin')
+    @ApiBearerAuth()
+    @UseGuards(new JwtAuthGuard())
     async updateAdminProfiles(@Body() updateAdminProfilesDto: UserDto.UpdateAdminProfilesDto, @Request() req): Promise<ResultInterface> {
         await this.userRepository.updateAdminProfiles(req.user.id, updateAdminProfilesDto);
         return {
@@ -71,9 +71,9 @@ export class UserController {
     }
 
     @ApiOperation({ description: '删除用户' })
-    @UseGuards(AuthGuard('jwt'))
-    @ApiBearerAuth()
     @Delete(':id')
+    @ApiBearerAuth()
+    @UseGuards(new JwtAuthGuard())
     async deleteUser(@Param('id') id: number): Promise<ResultInterface> {
         await this.userRepository.deleteById(id);
         return {
