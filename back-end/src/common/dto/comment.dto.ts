@@ -1,17 +1,22 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDefined, IsNotEmpty } from 'class-validator'
+import { IsNotEmpty, IsOptional } from 'class-validator'
+export enum COMMENT_TYPE {
+    ALL = 'ALL',
+    POST = 'POST',
+    ADMIN = 'ADMIN'
+}
 export namespace CommentDto {
     export class CreateCommentDto {
-        // @IsDefined()
-        // @ApiProperty({ description: '留言的用户id' })
-        // readonly sourceUserId: number;
-
         @IsNotEmpty()
         @ApiProperty({ description: '留言内容' })
         readonly content: string;
 
-        @IsDefined()
-        @ApiProperty({ description: '留言所属的主题id' })
+        @IsNotEmpty()
+        @ApiProperty({ description: '留言所属的类别', enum: COMMENT_TYPE, example: COMMENT_TYPE.POST })
+        readonly type: COMMENT_TYPE;
+
+        @IsOptional()
+        @ApiProperty({ description: '留言所属的主题id', nullable: true })
         readonly postId: number;
     }
 }

@@ -3,6 +3,7 @@ import { Post, Comment } from 'entities';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostInterface } from 'common/interfaces/index.interface';
+import { COMMENT_TYPE } from 'src/common/dto/index.dto';
 @Injectable()
 export class PostService {
     constructor(
@@ -83,6 +84,7 @@ export class PostService {
             .leftJoin('reply.sourceUser', 'reply_sourceUser')
             .leftJoin('reply.targetUser', 'reply_targetUser')
             .where('comment.postId = :id', { id: postId })
+            .andWhere('comment.type = :type', { type: COMMENT_TYPE.POST })
             .take(pageSize)
             .skip(offset)
             .getMany();

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Inject, HttpStatus, Request, Query, UseGuards, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
-import { CommentDto } from "common/dto/index.dto";
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiParam } from '@nestjs/swagger';
+import { CommentDto, COMMENT_TYPE } from "common/dto/index.dto";
 import { ResultInterface, SuccessMessage } from "common/interfaces/index.interface";
 import { CommentService } from './comment.service'
 import { JwtAuthGuard } from 'src/guards/index.guard'
@@ -14,9 +14,10 @@ export class CommentController {
     @ApiOperation({ description: '获取留言列表' })
     @ApiQuery({ name: 'page', example: 1 })
     @ApiQuery({ name: 'pageSize', example: 10 })
+    @ApiQuery({ name: 'type', example: COMMENT_TYPE.ALL, enum: COMMENT_TYPE })
     @Get()
-    async getComments(@Query('page') page = 1, @Query('pageSize') pageSize = 10): Promise<ResultInterface> {
-        const comments = await this.commentService.findAndCount(page, pageSize)
+    async getComments(@Query('page') page = 1, @Query('pageSize') pageSize = 10, @Query('type') type = COMMENT_TYPE.ALL): Promise<ResultInterface> {
+        const comments = await this.commentService.findAndCount(page, pageSize, type)
         return {
             success: true,
             message: SuccessMessage.Comment.LISTS,
@@ -39,12 +40,13 @@ export class CommentController {
         };
     }
 
-    @ApiOperation({ description: '删除留言' })
+    @ApiOperation({ description: '批量删除留言' })
+    @ApiParam({ name: 'ids', example: '1,2,3,4' })
     @ApiBearerAuth()
     @UseGuards(new JwtAuthGuard())
-    @Delete(':id')
-    async deleteComment(@Param('id', new ParseIntPipe()) id: number): Promise<ResultInterface> {
-        await this.commentService.deleteOneById(id);
+    @Delete(':ids')
+    async deleteComments(@Param('ids') ids: string): Promise<ResultInterface> {
+        await this.commentService.deleteById(ids.split(','));
         return {
             success: true,
             message: SuccessMessage.Comment.DELETE,

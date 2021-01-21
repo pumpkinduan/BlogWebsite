@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CommentDto } from 'common/dto/index.dto';
+import { CommentDto, COMMENT_TYPE } from 'common/dto/index.dto';
 import { Comment, Post, User, Reply } from 'entities';
 @Injectable()
 export class CommentService {
@@ -27,8 +27,8 @@ export class CommentService {
         return result;
     }
 
-    async deleteOneById(id: number): Promise<void> {
-        await this.commentRepository.delete(id);
+    async deleteById(ids: string[]): Promise<void> {
+        await this.commentRepository.delete(ids);
     }
 
     // 获取指定留言下的回复列表
@@ -55,10 +55,11 @@ export class CommentService {
     async findAndCount(
         page: number,
         pageSize: number,
+        type: COMMENT_TYPE
     ): Promise<Comment[]> {
         // 分页
         const offset = page * pageSize - pageSize;
-        return await this.commentRepository
+        const queryBuilder = this.commentRepository
             .createQueryBuilder('comment')
             .select([
                 'comment.id',
@@ -80,6 +81,10 @@ export class CommentService {
             .leftJoin('reply.targetUser', 'reply_targetUser')
             .take(pageSize)
             .skip(offset)
-            .getMany()
+
+        if (type === COMMENT_TYPE.ALL) {
+            return await queryBuilder.getMany();
+        }
+        return await queryBuilder.where('comment.type = :type', { type: type }).getMany();
     }
 }

@@ -1,3 +1,4 @@
+import { COMMENT_TYPE } from 'src/common/dto/index.dto';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, CreateDateColumn, OneToMany } from 'typeorm';
 import { User, Post, Reply } from './'
 
@@ -19,6 +20,9 @@ export class Comment {
     @OneToMany(() => Reply, reply => reply.comment)
     replies: Reply[]// 回复  
 
-    @ManyToOne(() => Post, post => post.comments, { cascade: true, onDelete: 'CASCADE' })
+    @ManyToOne(() => Post, post => post.comments, { cascade: true, onDelete: 'CASCADE', nullable: true })
     post: Pick<Post, 'id'>;
+
+    @Column({ nullable: false, comment: '留言所属的类别' })
+    type: COMMENT_TYPE
 }   
