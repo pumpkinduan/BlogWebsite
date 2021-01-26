@@ -22,7 +22,8 @@ export class CommentController {
             success: true,
             message: SuccessMessage.Comment.LISTS,
             statusCode: HttpStatus.OK,
-            data: comments
+            data: comments[0],
+            sum: comments[1]
         };
     }
 
