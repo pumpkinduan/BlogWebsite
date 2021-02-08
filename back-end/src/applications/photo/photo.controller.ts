@@ -32,7 +32,7 @@ const storage = multer.diskStorage({
         // 由于multer只会在初始化时创建目录(destination为字符串)，所以需要自己
         // 根据创建时间动态生成 文件目录
         const date = new Date();
-        const dir = `${process.cwd()}/statics/uploads/${date.getFullYear()}-${date.getMonth() +
+        const dir = `statics\\uploads\\${date.getFullYear()}-${date.getMonth() +
             1}`;
         if (!fs.existsSync(dir)) {
             fs.mkdirSync(dir);
