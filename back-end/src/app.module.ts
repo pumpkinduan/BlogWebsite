@@ -39,6 +39,7 @@ import { PhotoModule } from './applications/photo/photo.module';
                 entities: [Comment, Post, User, Reply, Photo],
                 synchronize: true,
                 logger: 'advanced-console',
+                charset: 'utf8mb4' // 支持emoji
                 // logging: 'all'
             }),
         }),

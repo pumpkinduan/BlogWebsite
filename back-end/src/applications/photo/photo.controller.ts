@@ -119,4 +119,17 @@ export class PhotoController {
             statusCode: 200,
         };
     }
+
+    @ApiOperation({ description: '删除指定图片' })
+    @Delete()
+    async deletePhotoByPath(
+        @Query('path') path: string,
+    ): Promise<ResultInterface> {
+        await this.photoService.deleteOneByPath(path);
+        return {
+            success: true,
+            message: SuccessMessage.Photo.DELETE,
+            statusCode: 200,
+        };
+    }
 }

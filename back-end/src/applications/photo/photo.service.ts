@@ -56,4 +56,19 @@ export class PhotoService {
             })
         });
     }
+
+    async deleteOneByPath(path: string) {
+        const photo = await this.photoRepository.findOne({ where: { path } });
+        if (!photo) {
+            throw new NotFoundException('图片资源不存在');
+        }
+        await this.photoRepository.delete(photo.id);
+        return new Promise((resolve) => {
+            // 删除文件数据
+            unlink(photo.path, (err) => {
+                if (err) throw err;
+                resolve(true);
+            })
+        });
+    }
 }
