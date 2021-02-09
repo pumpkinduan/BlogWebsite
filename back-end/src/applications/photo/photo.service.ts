@@ -12,12 +12,18 @@ export class PhotoService {
         @Inject(UserService) readonly userService: UserService,
     ) { }
 
-    async upload(photoProfiles: Omit<Photo, 'id' | 'createdAt'>, createPhotoDto: PhotoDto.CreatePhotoDto) {
+    async uploadFile(photoProfiles: Omit<Photo, 'id' | 'createdAt'>, createPhotoDto: PhotoDto.CreatePhotoDto) {
         const result = await this.photoRepository.save(photoProfiles);
         if (createPhotoDto.type === PhotoDto.PHOTO_TYPE.AVATAR) {
             // 上传的是头像，则需要更新指定用户的avatar
             this.userService.updateUserInfo(createPhotoDto.userId, { avatar: result.path })
         }
+        return result;
+    }
+
+
+    async uploadFiles(photosProfiles: Omit<Photo, 'id' | 'createdAt'>[]) {
+        const result = await this.photoRepository.save(photosProfiles);
         return result;
     }
 

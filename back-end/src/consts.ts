@@ -5,5 +5,6 @@ export const JWT = {
 
 export const FILE_LIMIT = {
     //  1024 * 1024 * 10  10M 大小
-    filesize: 10485760
+    fileSize: 1024 * 1024 * 10,
+    maxCount: 10
 }

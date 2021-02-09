@@ -4,6 +4,7 @@ import {
     Delete,
     Inject,
     Post,
+    UploadedFiles,
     UploadedFile,
     UseInterceptors,
     ParseIntPipe,
@@ -12,7 +13,7 @@ import {
     Query,
     UseGuards
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { ApiOperation, ApiTags, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import {
     ResultInterface,
@@ -52,16 +53,17 @@ export class PhotoController {
     constructor(@Inject(PhotoService) readonly photoService: PhotoService) { }
 
     @Post('upload')
-    @ApiOperation({ description: '表单字段名为：file' })
+    @ApiOperation({ description: '上传单张图片, 如头像，文章封面' })
     @UseInterceptors(FileInterceptor('file', {
         storage, limits: {
-            fileSize: FILE_LIMIT.filesize
+            fileSize: FILE_LIMIT.fileSize
         }
     }))
     async uploadPhoto(
         @UploadedFile() file,
         @Body() body: PhotoDto.CreatePhotoDto,
     ): Promise<ResultInterface> {
+
         const photoProfiles: Omit<Photo, 'id' | 'createdAt'> = {
             mimetype: file.mimetype,
             originalname: file.originalname,
@@ -71,15 +73,47 @@ export class PhotoController {
             destination: file.destination,
             type: body.type,
         };
-        const createdPhoto = await this.photoService.upload(photoProfiles, body);
+        const createdPhoto = await this.photoService.uploadFile(photoProfiles, body);
         return {
             statusCode: 200,
             success: true,
             data: {
                 id: createdPhoto.id,
-                path: file.path,
-                originalname: file.originalname,
+                path: createdPhoto.path,
+                originalname: createdPhoto.originalname,
             },
+        };
+    }
+
+    @Post('uploads')
+    @ApiOperation({ description: '上传多张图片, 如文章内的图片，相册墙' })
+    @UseInterceptors(FilesInterceptor('files', FILE_LIMIT.maxCount, {
+        storage, limits: {
+            fileSize: FILE_LIMIT.fileSize
+        }
+    }))
+    async uploadPhotos(
+        @UploadedFiles() files,
+        @Body() body: PhotoDto.CreatePhotoDto,
+    ): Promise<ResultInterface> {
+        const photosProfiles: Omit<Photo, 'id' | 'createdAt'>[] = files.map((file) => ({
+            mimetype: file.mimetype,
+            originalname: file.originalname,
+            size: file.size,
+            path: file.path,
+            filename: file.filename,
+            destination: file.destination,
+            type: body.type,
+        }));
+        const createdPhotos = await this.photoService.uploadFiles(photosProfiles);
+        return {
+            statusCode: 200,
+            success: true,
+            data: createdPhotos.map((createdPhoto) => ({
+                id: createdPhoto.id,
+                path: createdPhoto.path,
+                originalname: createdPhoto.originalname,
+            })),
         };
     }
 
