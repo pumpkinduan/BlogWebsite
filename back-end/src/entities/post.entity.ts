@@ -19,7 +19,7 @@ export class Post {
   @Column({ default: 'Pumpkin', length: 32 })
   author: string;
 
-  @Column('text', { nullable: false })
+  @Column('longtext', { nullable: false })
   content: string;
 
   @Column({ length: 2048, nullable: false })

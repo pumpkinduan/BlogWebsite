@@ -16,18 +16,8 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from './applications/auth/auth.module';
 import { ReplyModule } from './applications/reply/reply.module';
 import { PhotoModule } from './applications/photo/photo.module';
-// import { ServeStaticModule } from '@nestjs/serve-static';
-// import { join } from 'path';
-
 @Module({
     imports: [
-        // ServeStaticModule.forRoot({
-        //     rootPath: join(__dirname, '..', 'statics'),
-        //     serveRoot: '/static',
-        //     serveStaticOptions: {
-        //         extensions: ['jpg', 'jpeg', 'png', 'gif'],
-        //     }
-        // }),
         TypeOrmModule.forRootAsync({
             useFactory: () => ({
                 type: 'mysql',
@@ -39,7 +29,7 @@ import { PhotoModule } from './applications/photo/photo.module';
                 entities: [Comment, Post, User, Reply, Photo],
                 synchronize: true,
                 logger: 'advanced-console',
-                charset: 'utf8mb4' // 支持emoji
+                charset: 'utf8mb4_general_ci' // 支持emoji
                 // logging: 'all'
             }),
         }),
