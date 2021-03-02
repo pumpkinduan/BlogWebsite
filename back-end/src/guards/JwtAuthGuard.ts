@@ -12,9 +12,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         return super.canActivate(context);
     }
     handleRequest(err, user, info) {
-        console.log('err', err);
-        console.log('user', user);
-        console.log('info', info);
+        // console.log('err', err);
+        // console.log('user', user);
+        // console.log('info', info);
 
         // 可以抛出一个基于info或者err参数的异常
         if (err || !user) {

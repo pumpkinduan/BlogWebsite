@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CommentDto, COMMENT_TYPE } from 'common/dto/index.dto';
@@ -10,7 +10,7 @@ export class CommentService {
     @InjectRepository(Post) readonly postRepository: Repository<Post>,
     @InjectRepository(User) readonly userRepository: Repository<User>,
     @InjectRepository(Reply) readonly replyRepository: Repository<Reply>,
-  ) {}
+  ) { }
 
   async create(
     createComment: CommentDto.CreateCommentDto & { sourceUserId: number },
@@ -21,6 +21,11 @@ export class CommentService {
       createComment.sourceUserId,
       { select: ['id', 'username'] },
     );
+    const post = await this.postRepository.findOne(createComment.postId, { select: ['id'] });
+
+    if (!sourceUser) { throw new NotFoundException('该用户不存在'); }
+    if (!post) { throw new NotFoundException('该文章不存在'); }
+
     comment.sourceUser = sourceUser;
     comment.post = { id: createComment.postId };
     const result = await this.commentRepository.save(comment);
@@ -28,6 +33,7 @@ export class CommentService {
     await this.postRepository.update(createComment.postId, {
       totalComments: () => `totalComments + ${1}`,
     });
+
     return result;
   }
 
