@@ -58,9 +58,10 @@ export class PostController {
 		const posts = await this.postService.findAndCount(page, pageSize);
 		return {
 			statusCode: HttpStatus.OK,
-			data: posts,
+			data: posts[0],
 			message: SuccessMessage.Post.OK,
 			success: true,
+			sum: posts[1]
 		};
 	}
 
