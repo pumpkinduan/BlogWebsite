@@ -37,7 +37,7 @@ export class CommentService {
     return result;
   }
 
-  async deleteById(ids: string[]): Promise<void> {
+  async deleteByIds(ids: string[]): Promise<void> {
     await this.commentRepository.delete(ids);
   }
 

@@ -177,7 +177,7 @@ export class PostService {
         await this.postRepository.update(id, updatePost);
     }
 
-    async deleteOneById(id: number): Promise<void> {
-        await this.postRepository.delete(id);
+    async deleteByIds(ids: string[]): Promise<void> {
+        await this.postRepository.delete(ids);
     }
 }

@@ -128,11 +128,11 @@ export class PostController {
 	@ApiOperation({ description: '删除文章' })
 	@ApiBearerAuth()
 	@UseGuards(new JwtAuthGuard())
-	@Delete(':id')
+	@Delete(':ids')
 	async deletePost(
-		@Param('id', new ParseIntPipe()) id: number,
+		@Param('ids') ids: string,
 	): Promise<ResultInterface> {
-		await this.postService.deleteOneById(id);
+		await this.postService.deleteByIds(ids.split(','));
 		return {
 			success: true,
 			message: SuccessMessage.Post.DELETE,

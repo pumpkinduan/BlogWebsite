@@ -47,7 +47,7 @@ export class CommentController {
     @UseGuards(new JwtAuthGuard())
     @Delete(':ids')
     async deleteComments(@Param('ids') ids: string): Promise<ResultInterface> {
-        await this.commentService.deleteById(ids.split(','));
+        await this.commentService.deleteByIds(ids.split(','));
         return {
             success: true,
             message: SuccessMessage.Comment.DELETE,
